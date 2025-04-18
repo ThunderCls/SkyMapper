@@ -5,9 +5,9 @@ namespace SkyMapper.DataAccess.Models;
 public class TextureFile
 {
     public int Id { get; set; }
-    [Column(TypeName = "varchar(255)")]
+    [Column(TypeName = "varchar(500)")]
     public required string FilePath { get; set; }
-    public bool? IsProcessed { get; set; }
+    public bool IsProcessed { get; set; }
     [Column(TypeName = "varchar(50)")]
     public string? FileHashMd5 { get; set; }
 }

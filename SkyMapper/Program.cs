@@ -32,6 +32,11 @@ static class Program
                 .UseSerilog()
                 .Build();
 
+        using var scope = host.Services.CreateScope();
+        var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>();
+        using var dbContext = dbContextFactory.CreateDbContext();
+        dbContext.Database.Migrate();
+        
         var application = host.Services.GetService<FrmMain>()!;
         Application.Run(application);
     }

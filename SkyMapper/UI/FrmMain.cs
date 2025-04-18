@@ -193,7 +193,7 @@ public partial class FrmMain : Form
                     .Select(t => new TextureFileListItem
                     {
                         FilePath = t.FilePath,
-                        Status = t.IsProcessed ?? false ? nameof(Status.Finished) : nameof(Status.None),
+                        Status = t.IsProcessed ? nameof(Status.Finished) : nameof(Status.None),
                         FileHashMd5 = t.FileHashMd5,
                         IsProcessed = t.IsProcessed
                     })
@@ -339,7 +339,7 @@ public partial class FrmMain : Form
                 parentProcessName, 
                 Mo2ProcessName);
             MessageBox.Show(
-                "This application must be run from Mod Organizer 2!",
+                "Launch this application from Mod Organizer 2",
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
@@ -380,13 +380,15 @@ public partial class FrmMain : Form
         txtHeightIntensity.Text = settings.HeightMapIntensity.ToString();
         trackHeightIntensity.Value = settings.HeightMapIntensity;
         numThreadsCount.Value = settings.MaxThreads;
+        radioSyncOutputFolder.Checked = settings.SyncOutputFolder;
+        radioRemoveOutputFolder.Checked = !settings.SyncOutputFolder;
 
         _logger.LogInformation("Loading textures list");
         var storedTextures = (await _dataService.GetTextureFilesAsync())
             .Select(t => new TextureFileListItem
             {
                 FilePath = t.FilePath,
-                Status = t.IsProcessed ?? false ? nameof(Status.Finished) : nameof(Status.None),
+                Status = t.IsProcessed ? nameof(Status.Finished) : nameof(Status.None),
                 FileHashMd5 = t.FileHashMd5,
                 IsProcessed = t.IsProcessed
             })
@@ -526,6 +528,7 @@ public partial class FrmMain : Form
         settings.HeightMapIntensity = trackHeightIntensity.Value;
         settings.MaxThreads = (int)numThreadsCount.Value;
         settings.GameDataFolderLocation = txtGameLocation.Text;
+        settings.SyncOutputFolder = radioSyncOutputFolder.Checked;
         await _dataService.UpdateSettings(settings);
         MessageBox.Show("Settings saved!", "Settings", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }

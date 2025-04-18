@@ -18,7 +18,7 @@ namespace SkyMapper.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FolderPath = table.Column<string>(type: "varchar(255)", nullable: false)
+                    FolderPath = table.Column<string>(type: "varchar(500)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,9 +31,10 @@ namespace SkyMapper.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    GameDataFolderLocation = table.Column<string>(type: "varchar(255)", nullable: true),
+                    GameDataFolderLocation = table.Column<string>(type: "varchar(500)", nullable: true),
                     MaxThreads = table.Column<int>(type: "INTEGER", nullable: false),
-                    HeightMapIntensity = table.Column<int>(type: "INTEGER", nullable: false)
+                    HeightMapIntensity = table.Column<int>(type: "INTEGER", nullable: false),
+                    SyncOutputFolder = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,8 +47,8 @@ namespace SkyMapper.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FilePath = table.Column<string>(type: "varchar(255)", nullable: false),
-                    IsProcessed = table.Column<bool>(type: "INTEGER", nullable: true),
+                    FilePath = table.Column<string>(type: "varchar(500)", nullable: false),
+                    IsProcessed = table.Column<bool>(type: "INTEGER", nullable: false),
                     FileHashMd5 = table.Column<string>(type: "varchar(50)", nullable: true)
                 },
                 constraints: table =>
@@ -72,8 +73,8 @@ namespace SkyMapper.DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Settings",
-                columns: new[] { "Id", "GameDataFolderLocation", "HeightMapIntensity", "MaxThreads" },
-                values: new object[] { 1, null, -88, 5 });
+                columns: new[] { "Id", "GameDataFolderLocation", "HeightMapIntensity", "MaxThreads", "SyncOutputFolder" },
+                values: new object[] { 1, null, -88, 5, true });
         }
 
         /// <inheritdoc />
