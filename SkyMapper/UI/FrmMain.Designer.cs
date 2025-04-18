@@ -57,9 +57,10 @@ partial class FrmMain
         lineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
         excludeFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
         tabSettings = new System.Windows.Forms.TabPage();
+        groupBox1 = new System.Windows.Forms.GroupBox();
+        radioSyncOutputFolder = new System.Windows.Forms.RadioButton();
+        radioRemoveOutputFolder = new System.Windows.Forms.RadioButton();
         btnClearCache = new System.Windows.Forms.Button();
-        checkKeepOutputInSync = new System.Windows.Forms.CheckBox();
-        checkRemoveOutput = new System.Windows.Forms.CheckBox();
         btnReset = new System.Windows.Forms.Button();
         btnSaveSettings = new System.Windows.Forms.Button();
         txtHeightIntensity = new System.Windows.Forms.TextBox();
@@ -115,6 +116,7 @@ partial class FrmMain
         tabProcessing.SuspendLayout();
         ctxProcessing.SuspendLayout();
         tabSettings.SuspendLayout();
+        groupBox1.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)trackHeightIntensity).BeginInit();
         ((System.ComponentModel.ISupportInitialize)numThreadsCount).BeginInit();
         pageFolderExclusions.SuspendLayout();
@@ -138,10 +140,10 @@ partial class FrmMain
         statusStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
         statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
         statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { stripStatus, stripTimer });
-        statusStrip1.Location = new System.Drawing.Point(0, 790);
+        statusStrip1.Location = new System.Drawing.Point(0, 783);
         statusStrip1.Name = "statusStrip1";
         statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
-        statusStrip1.Size = new System.Drawing.Size(1202, 22);
+        statusStrip1.Size = new System.Drawing.Size(1197, 22);
         statusStrip1.TabIndex = 6;
         // 
         // stripStatus
@@ -168,7 +170,7 @@ partial class FrmMain
         tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         tabControl1.Name = "tabControl1";
         tabControl1.SelectedIndex = 0;
-        tabControl1.Size = new System.Drawing.Size(1202, 790);
+        tabControl1.Size = new System.Drawing.Size(1197, 783);
         tabControl1.TabIndex = 0;
         // 
         // tabProcessing
@@ -181,7 +183,7 @@ partial class FrmMain
         tabProcessing.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         tabProcessing.Name = "tabProcessing";
         tabProcessing.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        tabProcessing.Size = new System.Drawing.Size(1194, 762);
+        tabProcessing.Size = new System.Drawing.Size(1189, 755);
         tabProcessing.TabIndex = 0;
         tabProcessing.Text = "Processing";
         tabProcessing.UseVisualStyleBackColor = true;
@@ -189,7 +191,7 @@ partial class FrmMain
         // progressLoading
         // 
         progressLoading.Anchor = System.Windows.Forms.AnchorStyles.None;
-        progressLoading.Location = new System.Drawing.Point(401, 346);
+        progressLoading.Location = new System.Drawing.Point(398, 342);
         progressLoading.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         progressLoading.MarqueeAnimationSpeed = 20;
         progressLoading.Name = "progressLoading";
@@ -203,7 +205,7 @@ partial class FrmMain
         // 
         btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
         btnStop.Enabled = false;
-        btnStop.Location = new System.Drawing.Point(920, 726);
+        btnStop.Location = new System.Drawing.Point(915, 719);
         btnStop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         btnStop.Name = "btnStop";
         btnStop.Size = new System.Drawing.Size(131, 30);
@@ -215,7 +217,7 @@ partial class FrmMain
         // btnStart
         // 
         btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        btnStart.Location = new System.Drawing.Point(1056, 726);
+        btnStart.Location = new System.Drawing.Point(1051, 719);
         btnStart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         btnStart.Name = "btnStart";
         btnStart.Size = new System.Drawing.Size(131, 30);
@@ -234,7 +236,7 @@ partial class FrmMain
         listProcessing.Location = new System.Drawing.Point(7, 4);
         listProcessing.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         listProcessing.Name = "listProcessing";
-        listProcessing.Size = new System.Drawing.Size(1182, 715);
+        listProcessing.Size = new System.Drawing.Size(1175, 708);
         listProcessing.TabIndex = 11;
         listProcessing.UseCompatibleStateImageBehavior = false;
         listProcessing.View = System.Windows.Forms.View.Details;
@@ -335,9 +337,8 @@ partial class FrmMain
         // 
         // tabSettings
         // 
+        tabSettings.Controls.Add(groupBox1);
         tabSettings.Controls.Add(btnClearCache);
-        tabSettings.Controls.Add(checkKeepOutputInSync);
-        tabSettings.Controls.Add(checkRemoveOutput);
         tabSettings.Controls.Add(btnReset);
         tabSettings.Controls.Add(btnSaveSettings);
         tabSettings.Controls.Add(txtHeightIntensity);
@@ -350,14 +351,46 @@ partial class FrmMain
         tabSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         tabSettings.Name = "tabSettings";
         tabSettings.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        tabSettings.Size = new System.Drawing.Size(1194, 762);
+        tabSettings.Size = new System.Drawing.Size(1189, 755);
         tabSettings.TabIndex = 1;
         tabSettings.Text = "Settings";
         tabSettings.UseVisualStyleBackColor = true;
         // 
+        // groupBox1
+        // 
+        groupBox1.Controls.Add(radioSyncOutputFolder);
+        groupBox1.Controls.Add(radioRemoveOutputFolder);
+        groupBox1.Location = new System.Drawing.Point(8, 82);
+        groupBox1.Name = "groupBox1";
+        groupBox1.Size = new System.Drawing.Size(568, 133);
+        groupBox1.TabIndex = 23;
+        groupBox1.TabStop = false;
+        groupBox1.Text = "Output";
+        // 
+        // radioSyncOutputFolder
+        // 
+        radioSyncOutputFolder.Checked = true;
+        radioSyncOutputFolder.Location = new System.Drawing.Point(38, 70);
+        radioSyncOutputFolder.Name = "radioSyncOutputFolder";
+        radioSyncOutputFolder.Size = new System.Drawing.Size(212, 24);
+        radioSyncOutputFolder.TabIndex = 1;
+        radioSyncOutputFolder.TabStop = true;
+        radioSyncOutputFolder.Text = "Keep output folder in sync";
+        radioSyncOutputFolder.UseVisualStyleBackColor = true;
+        // 
+        // radioRemoveOutputFolder
+        // 
+        radioRemoveOutputFolder.Location = new System.Drawing.Point(38, 40);
+        radioRemoveOutputFolder.Name = "radioRemoveOutputFolder";
+        radioRemoveOutputFolder.Size = new System.Drawing.Size(230, 24);
+        radioRemoveOutputFolder.TabIndex = 0;
+        radioRemoveOutputFolder.Text = "Remove output folder when finished";
+        radioRemoveOutputFolder.UseVisualStyleBackColor = true;
+        // 
         // btnClearCache
         // 
-        btnClearCache.Location = new System.Drawing.Point(783, 729);
+        btnClearCache.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnClearCache.Location = new System.Drawing.Point(778, 722);
         btnClearCache.Name = "btnClearCache";
         btnClearCache.Size = new System.Drawing.Size(131, 30);
         btnClearCache.TabIndex = 22;
@@ -365,32 +398,10 @@ partial class FrmMain
         btnClearCache.UseVisualStyleBackColor = true;
         btnClearCache.Click += btnClearCache_Click;
         // 
-        // checkKeepOutputInSync
-        // 
-        checkKeepOutputInSync.AutoSize = true;
-        checkKeepOutputInSync.Checked = true;
-        checkKeepOutputInSync.CheckState = System.Windows.Forms.CheckState.Checked;
-        checkKeepOutputInSync.Location = new System.Drawing.Point(8, 102);
-        checkKeepOutputInSync.Name = "checkKeepOutputInSync";
-        checkKeepOutputInSync.Size = new System.Drawing.Size(165, 19);
-        checkKeepOutputInSync.TabIndex = 21;
-        checkKeepOutputInSync.Text = "Keep output folder in sync";
-        checkKeepOutputInSync.UseVisualStyleBackColor = true;
-        // 
-        // checkRemoveOutput
-        // 
-        checkRemoveOutput.AutoSize = true;
-        checkRemoveOutput.Location = new System.Drawing.Point(8, 77);
-        checkRemoveOutput.Name = "checkRemoveOutput";
-        checkRemoveOutput.Size = new System.Drawing.Size(219, 19);
-        checkRemoveOutput.TabIndex = 20;
-        checkRemoveOutput.Text = "Remove output folder when finished";
-        checkRemoveOutput.UseVisualStyleBackColor = true;
-        // 
         // btnReset
         // 
         btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        btnReset.Location = new System.Drawing.Point(920, 729);
+        btnReset.Location = new System.Drawing.Point(915, 722);
         btnReset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         btnReset.Name = "btnReset";
         btnReset.Size = new System.Drawing.Size(131, 30);
@@ -402,7 +413,7 @@ partial class FrmMain
         // btnSaveSettings
         // 
         btnSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        btnSaveSettings.Location = new System.Drawing.Point(1056, 729);
+        btnSaveSettings.Location = new System.Drawing.Point(1051, 722);
         btnSaveSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         btnSaveSettings.Name = "btnSaveSettings";
         btnSaveSettings.Size = new System.Drawing.Size(131, 30);
@@ -430,7 +441,7 @@ partial class FrmMain
         trackHeightIntensity.Maximum = -50;
         trackHeightIntensity.Minimum = -100;
         trackHeightIntensity.Name = "trackHeightIntensity";
-        trackHeightIntensity.Size = new System.Drawing.Size(215, 28);
+        trackHeightIntensity.Size = new System.Drawing.Size(217, 28);
         trackHeightIntensity.TabIndex = 16;
         trackHeightIntensity.Value = -88;
         trackHeightIntensity.ValueChanged += trackHeightIntensity_ValueChanged;
@@ -486,7 +497,7 @@ partial class FrmMain
         pageFolderExclusions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         pageFolderExclusions.Name = "pageFolderExclusions";
         pageFolderExclusions.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        pageFolderExclusions.Size = new System.Drawing.Size(1194, 762);
+        pageFolderExclusions.Size = new System.Drawing.Size(1189, 755);
         pageFolderExclusions.TabIndex = 3;
         pageFolderExclusions.Text = "Folder Exclusions";
         pageFolderExclusions.UseVisualStyleBackColor = true;
@@ -498,7 +509,7 @@ partial class FrmMain
         txtExcludedFolder.Location = new System.Drawing.Point(3, 2);
         txtExcludedFolder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         txtExcludedFolder.Name = "txtExcludedFolder";
-        txtExcludedFolder.Size = new System.Drawing.Size(1188, 23);
+        txtExcludedFolder.Size = new System.Drawing.Size(1183, 23);
         txtExcludedFolder.TabIndex = 30;
         txtExcludedFolder.KeyPress += txtExcludedFolder_KeyPress;
         // 
@@ -510,11 +521,11 @@ partial class FrmMain
         listExcludedFolders.Dock = System.Windows.Forms.DockStyle.Bottom;
         listExcludedFolders.FullRowSelect = true;
         listExcludedFolders.GridLines = true;
-        listExcludedFolders.Location = new System.Drawing.Point(3, 35);
+        listExcludedFolders.Location = new System.Drawing.Point(3, 29);
         listExcludedFolders.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         listExcludedFolders.Name = "listExcludedFolders";
         listExcludedFolders.Scrollable = false;
-        listExcludedFolders.Size = new System.Drawing.Size(1188, 725);
+        listExcludedFolders.Size = new System.Drawing.Size(1183, 724);
         listExcludedFolders.TabIndex = 29;
         listExcludedFolders.UseCompatibleStateImageBehavior = false;
         listExcludedFolders.View = System.Windows.Forms.View.Details;
@@ -547,7 +558,7 @@ partial class FrmMain
         pageModExclusions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         pageModExclusions.Name = "pageModExclusions";
         pageModExclusions.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        pageModExclusions.Size = new System.Drawing.Size(1194, 762);
+        pageModExclusions.Size = new System.Drawing.Size(1189, 755);
         pageModExclusions.TabIndex = 2;
         pageModExclusions.Text = "Mod Exclusions";
         pageModExclusions.UseVisualStyleBackColor = true;
@@ -567,8 +578,8 @@ partial class FrmMain
         // splitContainer1.Panel2
         // 
         splitContainer1.Panel2.Controls.Add(splitContainer2);
-        splitContainer1.Size = new System.Drawing.Size(1188, 758);
-        splitContainer1.SplitterDistance = 659;
+        splitContainer1.Size = new System.Drawing.Size(1183, 751);
+        splitContainer1.SplitterDistance = 656;
         splitContainer1.TabIndex = 29;
         // 
         // lstModList
@@ -583,7 +594,7 @@ partial class FrmMain
         lstModList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         lstModList.Name = "lstModList";
         lstModList.Scrollable = false;
-        lstModList.Size = new System.Drawing.Size(659, 735);
+        lstModList.Size = new System.Drawing.Size(656, 728);
         lstModList.TabIndex = 24;
         lstModList.UseCompatibleStateImageBehavior = false;
         lstModList.View = System.Windows.Forms.View.Details;
@@ -647,7 +658,7 @@ partial class FrmMain
         txtModsLocation.Location = new System.Drawing.Point(0, 0);
         txtModsLocation.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         txtModsLocation.Name = "txtModsLocation";
-        txtModsLocation.Size = new System.Drawing.Size(659, 23);
+        txtModsLocation.Size = new System.Drawing.Size(656, 23);
         txtModsLocation.TabIndex = 23;
         txtModsLocation.Text = "Mods location...";
         txtModsLocation.Click += txtModsLocation_Click;
@@ -668,8 +679,8 @@ partial class FrmMain
         // splitContainer2.Panel2
         // 
         splitContainer2.Panel2.Controls.Add(listView2);
-        splitContainer2.Size = new System.Drawing.Size(525, 758);
-        splitContainer2.SplitterDistance = 346;
+        splitContainer2.Size = new System.Drawing.Size(523, 751);
+        splitContainer2.SplitterDistance = 341;
         splitContainer2.SplitterWidth = 3;
         splitContainer2.TabIndex = 0;
         // 
@@ -685,7 +696,7 @@ partial class FrmMain
         listView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         listView1.Name = "listView1";
         listView1.Scrollable = false;
-        listView1.Size = new System.Drawing.Size(525, 346);
+        listView1.Size = new System.Drawing.Size(523, 341);
         listView1.TabIndex = 28;
         listView1.UseCompatibleStateImageBehavior = false;
         listView1.View = System.Windows.Forms.View.Details;
@@ -738,7 +749,7 @@ partial class FrmMain
         listView2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
         listView2.Name = "listView2";
         listView2.Scrollable = false;
-        listView2.Size = new System.Drawing.Size(525, 409);
+        listView2.Size = new System.Drawing.Size(523, 407);
         listView2.TabIndex = 29;
         listView2.UseCompatibleStateImageBehavior = false;
         listView2.View = System.Windows.Forms.View.Details;
@@ -823,7 +834,7 @@ partial class FrmMain
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(1202, 812);
+        ClientSize = new System.Drawing.Size(1197, 805);
         Controls.Add(tabControl1);
         Controls.Add(statusStrip1);
         Icon = ((System.Drawing.Icon)resources.GetObject("$this.Icon"));
@@ -840,6 +851,7 @@ partial class FrmMain
         ctxProcessing.ResumeLayout(false);
         tabSettings.ResumeLayout(false);
         tabSettings.PerformLayout();
+        groupBox1.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)trackHeightIntensity).EndInit();
         ((System.ComponentModel.ISupportInitialize)numThreadsCount).EndInit();
         pageFolderExclusions.ResumeLayout(false);
@@ -861,6 +873,11 @@ partial class FrmMain
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.RadioButton radioRemoveOutputFolder;
+    private System.Windows.Forms.RadioButton radioSyncOutputFolder;
+
+    private System.Windows.Forms.GroupBox groupBox1;
 
     private System.Windows.Forms.Button btnClearCache;
 
@@ -939,8 +956,8 @@ partial class FrmMain
     private System.Windows.Forms.TextBox txtExcludedFolder;
     private ContextMenuStrip ctxExcludedFolders;
     private ToolStripMenuItem deleteToolStripMenuItem;
-    private Button btnSaveSettings;
-    private Button btnReset;
+    private System.Windows.Forms.Button btnSaveSettings;
+    private System.Windows.Forms.Button btnReset;
     private ToolStripSeparator toolStripMenuItem12;
     private ToolStripMenuItem copyFilePathMenuItem;
     private ToolStripMenuItem excludeFolderMenuItem;
@@ -950,6 +967,4 @@ partial class FrmMain
     private ToolStripMenuItem statusToolStripMenuItem;
     private ToolStripMenuItem hashToolStripMenuItem;
     private ToolStripMenuItem lineToolStripMenuItem;
-    private System.Windows.Forms.CheckBox checkRemoveOutput;
-    private System.Windows.Forms.CheckBox checkKeepOutputInSync;
 }

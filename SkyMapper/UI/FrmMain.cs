@@ -175,7 +175,7 @@ public partial class FrmMain : Form
                     normalsNoParallaxList,
                     txtGameLocation.Text,
                     OutputLocation,
-                    checkKeepOutputInSync.Checked);
+                    radioSyncOutputFolder.Checked);
                 if (!storedTextures.Any())
                 {
                     _logger.LogInformation("No missing height maps found. Stopping...");
@@ -281,7 +281,7 @@ public partial class FrmMain : Form
                     OutputLocation,
                     $"{OutputLocation}.zip",
                     CancellationTokenSrc.Token);
-                if (checkRemoveOutput.Checked)
+                if (radioRemoveOutputFolder.Checked)
                 {
                     _logger.LogInformation("RemoveOutput is checked, removing output folder {OutputLocation}",
                         OutputLocation);
@@ -541,8 +541,8 @@ public partial class FrmMain : Form
         var settings = new Settings();
         trackHeightIntensity.Value = settings.HeightMapIntensity;
         numThreadsCount.Value = settings.MaxThreads;
-        checkKeepOutputInSync.Checked = true;
-        checkRemoveOutput.Checked = false;
+        radioSyncOutputFolder.Checked = true;
+        radioRemoveOutputFolder.Checked = false;
     }
 
     private void ctxExcludedFolders_Opening(object sender, System.ComponentModel.CancelEventArgs e)
