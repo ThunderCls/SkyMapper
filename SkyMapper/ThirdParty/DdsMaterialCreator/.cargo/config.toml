@@ -1,0 +1,12 @@
+# select the target to compile
+# make sure you have the proper ISPC binaries for your platform to use with intel_tex_2 crate
+# check https://github.com/gwihlidal/intel-tex-rs for more details on how to compile
+
+# - install https://github.com/gwihlidal/intel-tex-rs/blob/master/dependencies
+# - copy to vendor folder and compile https://github.com/GameTechDev/ISPCTextureCompressor/tree/14d998c02b71c356ff3a1ec1adc9243a517bbf38
+# - recompile intel_tex_2 crate
+
+[build]
+#target = "i686-pc-windows-gnu"
+target = "i686-pc-windows-msvc"
+#target = "x86_64-pc-windows-msvc"

@@ -1,12 +1,15 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using DirectXTexNet;
 using ImageMagick;
+using Microsoft.Extensions.Logging;
+using SkyMapper.Services;
 
 namespace SkyMapper.Utils;
 
 public static class TextureUtils
 {
+    private static ILogger<WorkerService> Logger => ServiceLocator.LocateService<ILogger<WorkerService>>();
+
     public static async Task<string> ConvertToPng(string inputFile, string destinationDirectory)
     {
         try
@@ -15,7 +18,7 @@ public static class TextureUtils
             // Remove alpha channel
             image.Alpha(AlphaOption.Off);
             image.BackgroundColor = new MagickColor(0, 0, 0, 0); //MagickColors.Transparent;
-            image.Resize(2048, 2048);
+            // image.Resize(2048, 2048);
             var outputFile = Path.Combine(
                 destinationDirectory,
                 Path.GetFileNameWithoutExtension(inputFile) + ".png");
@@ -24,40 +27,43 @@ public static class TextureUtils
         }
         catch (Exception e)
         {
-            Debug.WriteLine($"ConvertToPNG failed for {inputFile} - {e}");
-            throw;
+            Logger.LogError(e, $"ConvertToPNG failed for: {inputFile}");
         }
+        
+        return string.Empty;
     }
 
-    public static async Task SetHeightMapIntensity(string inputFile, double contrast = -88)
+    public static async Task SetHeightMapIntensity(string inputFile, double contrast = -20)
     {
         try
         {
             using var image = new MagickImage(inputFile);
-            image.BrightnessContrast(new Percentage(-25), new Percentage(contrast));
+            image.BrightnessContrast(new Percentage(0), new Percentage(contrast));
             await image.WriteAsync(inputFile);
         }
         catch (Exception e)
         {
-            Debug.WriteLine($"SetHeightMapIntensity failed for {inputFile} - {e}");
+            Logger.LogError(e, $"SetHeightMapIntensity failed for: {inputFile}");
             throw;
         }
     }
 
-    public static async Task ConvertToDds(string inputFile)
+    public static async Task ConvertToDds(string inputFile, int resizeMaxHeight = 1024)
     {
         try
         {
             using var scratchImage = TexHelper.Instance.LoadFromWICFile(inputFile, WIC_FLAGS.NONE);
-            var resizedImage = ResizeToPowerOfTwo(scratchImage, 1024);
+            ScratchImage? resizedImage = null;
+            if (resizeMaxHeight > 0)
+                resizedImage = ResizeToPowerOfTwo(scratchImage, resizeMaxHeight);
             // Compress the image to BC4_UNORM format
-            var compressedImage = resizedImage.Compress(DXGI_FORMAT.BC4_UNORM, TEX_COMPRESS_FLAGS.DEFAULT, 0.5f);
+            var compressedImage = (resizedImage ?? scratchImage).Compress(DXGI_FORMAT.BC4_UNORM, TEX_COMPRESS_FLAGS.DEFAULT, 0.5f);
             var parallaxTexture = Regex.Replace(inputFile, @"_p\.png$", "_p.dds", RegexOptions.IgnoreCase);
             await Task.Run(() => compressedImage.SaveToDDSFile(DDS_FLAGS.NONE, parallaxTexture));
         }
         catch (Exception e)
         {
-            Debug.WriteLine($"ConvertToDDS failed for {inputFile} - {e}");
+            Logger.LogError(e, $"ConvertToDDS failed for: {inputFile}");
             throw;
         }
     }

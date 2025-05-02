@@ -8,12 +8,25 @@ public class WorkerService
 {
     private readonly ILogger<WorkerService> _logger;
     private readonly string _normalToHeightExecutable;
+    private WorkerArgs? _args;
     
     public event Func<string, CancellationToken, Task>? WorkerInit;
     public event Func<string, CancellationToken, Task>? WorkerTerminate;
-    public event Func<string, string, CancellationToken, Task>? WorkerProgress;
+    public event Action<string, string>? WorkerProgress;
     public event Func<string, string, CancellationToken, Task>? WorkerError;
 
+    public class WorkerArgs
+    {
+        public string File { get; set; } = string.Empty;
+        public string OutputLocation { get; set; } = string.Empty;
+        public string GameDataLocation { get; set; } = string.Empty;
+        public double HeightIntensity { get; set; }
+        public int HeightNumberPasses { get; set; }
+        public int HeightMaxSteps { get; set; }
+        public Form SynchronizingObject { get; set; } = null!;
+        public CancellationToken CancellationToken { get; set; }
+    }
+    
     public WorkerService(ILogger<WorkerService> logger)
     {
         _logger = logger;
@@ -26,10 +39,10 @@ public class WorkerService
     
     #region Events
 
-    private async Task OnWorkerProgress(string file, string message, CancellationToken cancellationToken = default)
+    private void OnWorkerProgress(string file, string message)
     {
         if (WorkerProgress is not null)
-            await WorkerProgress.Invoke(file, message, cancellationToken);
+            WorkerProgress.Invoke(file, message);
     }
 
     private async Task OnWorkerError(string file, string message, CancellationToken cancellationToken = default)
@@ -50,6 +63,16 @@ public class WorkerService
             await WorkerTerminate.Invoke(file, cancellationToken);
     }
 
+    private async Task OnProcessExecutionError(string message)
+    {
+        await OnWorkerError(_args!.File, message, _args!.CancellationToken);
+    }
+    
+    private void OnProcessExecutionProgress(string message)
+    {
+        OnWorkerProgress(_args!.File, message);
+    }
+    
     #endregion
 
     // Processing
@@ -59,85 +82,85 @@ public class WorkerService
     // 4- Convert the height map to DDS
     // 5- Delete all PNG files and leave only the height map DDS files
     // 6- When all mods are processed, pack the output directory into a zip file
-    public async Task ProcessNormalTextures(
-        string file, 
-        string outputLocation, 
-        string gameDataLocation,
-        double heightIntensity,
-        CancellationToken cancellationToken)
+    public async Task ProcessNormalTextures(WorkerArgs args)
     {
+        _args = args;
+        var normalImage = string.Empty;
+        var parallaxImage = string.Empty;
         try
         {
-            await OnWorkerInit(file, cancellationToken);
-            var destinationFile = Path.Combine(outputLocation,
-                file.Replace($"{gameDataLocation}{Path.DirectorySeparatorChar}", string.Empty));
+            await OnWorkerInit(args.File, args.CancellationToken);
+            var destinationFile = Path.Combine(args.OutputLocation,
+                args.File.Replace($"{args.GameDataLocation}{Path.DirectorySeparatorChar}", string.Empty));
             var destinationDirectory = Path.GetDirectoryName(destinationFile)!;
             if (!Directory.Exists(destinationDirectory))
                 Directory.CreateDirectory(destinationDirectory);
 
-            await OnWorkerProgress(file, "Changing texture format", cancellationToken);
-            var pngImage = await TextureUtils.ConvertToPng(file, destinationDirectory);
-            var parallaxImage = Regex.Replace(pngImage, @"_n\.png$", "_p.png", RegexOptions.IgnoreCase);
+            OnWorkerProgress(args.File, "Changing texture format");
+            normalImage = await TextureUtils.ConvertToPng(args.File, destinationDirectory);
+            if (!File.Exists(normalImage))
+            {
+                _logger.LogError(
+                    "Error changing format of normal map: {NormalImage}. Trying backup method using DDSMaterialCreator",
+                    normalImage);
+                var textureToImageArgs = new DdsMaterialCreatorUtils.TextureToImageArgs
+                {
+                    TexturePath = args.File,
+                    OutputPath = destinationDirectory,
+                    HighQuality = true,
+                    ArchaicFormat = false
+                };
+                DdsMaterialCreatorUtils.TextureToImage(ref textureToImageArgs, out var errorMessage);
+                normalImage = Path.Combine(destinationDirectory, Path.GetFileNameWithoutExtension(args.File) + ".png");
+                if (!File.Exists(normalImage))
+                {
+                    throw new ApplicationException($"Error changing format of normal map: {normalImage}. Details: {errorMessage}");
+                }
+            }
 
-            await OnWorkerProgress(file, "Creating height map", cancellationToken);
-            await ProcessUtils.ExecuteProcess($"\"{_normalToHeightExecutable}\"",
-                $"\"{Path.Combine(AppContext.BaseDirectory, pngImage)}\" "+
+            parallaxImage = Regex.Replace(normalImage, @"_n\.png$", "_p.png", RegexOptions.IgnoreCase);
+
+            OnWorkerProgress(args.File, "Creating height map");
+            await ProcessUtils.ExecuteProcessAsync(
+                _normalToHeightExecutable,
+                $"\"{Path.Combine(AppContext.BaseDirectory, normalImage)}\" " +
                 $"\"{Path.Combine(AppContext.BaseDirectory, parallaxImage)}\" " +
-                "-scale 100.00 -numPasses 32 -normalScale 1.00 -maxStepHeight 1 " + 
-                "-mapping XrYfgZb -zrange full -edgeMode Wrap", hidden: true);
-            await TextureUtils.SetHeightMapIntensity(parallaxImage, heightIntensity);
+                $"-scale 100 -numPasses {args.HeightNumberPasses} -normalScale 1 -maxStepHeight {args.HeightMaxSteps} -normalise " +
+                "-mapping XrYfgZb -zrange full -edgeMode Wrap",
+                args.SynchronizingObject,
+                // OnProcessExecutionProgress,
+                errorAction: OnProcessExecutionError);
+            if (!File.Exists(parallaxImage))
+            {
+                throw new ApplicationException($"Parallax map image couldn't be created: {parallaxImage}");
+            }
 
-            await OnWorkerProgress(file, "Changing texture format", cancellationToken);
+            await TextureUtils.SetHeightMapIntensity(parallaxImage, args.HeightIntensity);
+
+            OnWorkerProgress(args.File, "Changing texture format");
             await TextureUtils.ConvertToDds(parallaxImage);
-
-            await OnWorkerProgress(file, "Removing temporary files", cancellationToken);
-            File.Delete(pngImage);
-            File.Delete(parallaxImage);
-
-            await OnWorkerTerminate(file, cancellationToken);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "WorkerService failed");
-            await OnWorkerError(file, e.Message, cancellationToken);
+            CleanTemporaryFiles(normalImage, parallaxImage);
+            await OnWorkerError(args.File, e.Message, args.CancellationToken);
+            return;
         }
+        
+        OnWorkerProgress(args.File, "Removing temporary files");
+        CleanTemporaryFiles(normalImage, parallaxImage);
+        await OnWorkerTerminate(args.File, args.CancellationToken);
     }
-    
-    //public static void ProcessModTextures(string texture, string destinationFolder)
-    //{
-    //    var bsaTextureFiles = new Dictionary<string, List<string>>();
-    //    var looseTextureFiles = new List<string>();
-    //    var inputFolder = Directory.GetParent(texture)!.FullName;
-    //    var files = Directory.GetFiles(texture).ToList();
 
-    //    if (files.Exists(f => Path.GetExtension(f) == ".bsa"))
-    //    {
-    //        foreach (var bsaFile in files.Where(f => Path.GetExtension(f) == ".bsa"))
-    //        {
-    //            bsaTextureFiles.TryAdd(bsaFile, BsaService.GetFiles(bsaFile, [@"^.*_n\.dds$", @"^.*_p\.dds$"]));
-    //        }
-    //    }
-    //    bsaTextureFiles = ExtractMissingParallaxNormals(bsaTextureFiles);
-
-    //    looseTextureFiles.AddRange(DirectoryService.GetFiles(texture, [@"^.*_n\.dds$", @"^.*_p\.dds$"]));
-    //    looseTextureFiles = ExtractMissingParallaxNormals(looseTextureFiles);
-
-    //    if (bsaTextureFiles.Any())
-    //    {
-    //        foreach(var bsaFile in bsaTextureFiles.Keys)
-    //        {
-    //            BsaService.ExtractFiles(bsaFile, destinationFolder, bsaTextureFiles.GetValueOrDefault(bsaFile) ?? []);
-    //        }
-    //    }
-
-    //    if (looseTextureFiles.Any())
-    //    {
-    //        ProcessTextures(looseTextureFiles, inputFolder, destinationFolder);
-    //    }
-    //}
-
-    //private static List<string> ExtractMissingParallaxNormals(Dictionary<string, List<string>> textures)
-    //{
-    //    var missingParallaxTextures = new List<string>();
-    //}
+    private static void CleanTemporaryFiles(string normalImage, string parallaxImage)
+    {
+        try
+        {
+            if (File.Exists(normalImage))
+                File.Delete(normalImage);
+            if (File.Exists(parallaxImage))
+                File.Delete(parallaxImage);
+        }
+        catch {}
+    }
 }

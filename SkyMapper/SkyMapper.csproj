@@ -8,11 +8,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <ApplicationIcon>icon.ico</ApplicationIcon>
+        <Configurations>Debug;Release</Configurations>
+        <Platforms>AnyCPU;x86</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="DirectXTexNet" Version="1.0.7" />
-      <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.4.0" />
+      <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.6.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.15" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.15">
@@ -42,7 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DataAccess\Migrations\" />
+      <Folder Include="DataAccess\Migrations\" />      
       <Folder Include="ThirdParty\NormalToHeight\" />
     </ItemGroup>
 
@@ -54,6 +56,10 @@
       <None Remove="ThirdParty\NormalToHeight\Shaders.hlsl" />
       <Content Include="ThirdParty\NormalToHeight\Shaders.hlsl">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="ThirdParty\DdsMaterialCreator\dds_material_creator.dll" />
+      <Content Include="ThirdParty\DdsMaterialCreator\dds_material_creator.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
 

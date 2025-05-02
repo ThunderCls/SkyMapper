@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using SkyMapper.DataAccess.Dtos;
 using SkyMapper.DataAccess.Models;
@@ -18,6 +19,7 @@ public partial class FrmMain : Form
     private DateTime? StartProcessingTime { get; set; }
     private int _totalFiles;
     private int _processedFiles;
+    private int _failedFiles;
     private bool _isProcessing;
     private const string Mo2ProcessName = "ModOrganizer";
     private const string OutputLocation = "SkyMapper_Output";
@@ -32,18 +34,18 @@ public partial class FrmMain : Form
 
     public FrmMain(
         ILogger<FrmMain> logger,
-        WorkerService workerService, 
+        WorkerService workerService,
         DataService dataService)
     {
         _logger = logger;
         _workerService = workerService;
         _dataService = dataService;
-        
+
         _workerService.WorkerProgress += OnWorkerServiceProgress;
         _workerService.WorkerTerminate += OnWorkerServiceTerminate;
         _workerService.WorkerInit += OnWorkerServiceInit;
         _workerService.WorkerError += OnWorkerServiceError;
-
+        
         InitializeComponent();
     }
 
@@ -53,17 +55,15 @@ public partial class FrmMain : Form
     {
         var storedTexture = await _dataService.GetTextureFileAsync(file, cancellationToken);
         storedTexture.IsProcessed = false;
-        storedTexture.FileHashMd5 = string.Empty;
+        storedTexture.FileHashMd5 = null;
         await _dataService.UpdateTextureFileAsync(storedTexture, cancellationToken);
 
-        Invoke(() =>
+        GuiUtils.UpdateWorkerDetails(listProcessing, new TextureFileListItem
         {
-            GuiUtils.UpdateWorkerStatus(listProcessing, new TextureFileListItem
-            {
-                FilePath = file,
-                Status = nameof(Status.Processing)
-            });
-        });
+            FilePath = file,
+            Status = nameof(Status.Processing),
+            IsProcessed = false
+        }, Color.Black);
     }
 
     private async Task OnWorkerServiceTerminate(string file, CancellationToken cancellationToken)
@@ -71,58 +71,47 @@ public partial class FrmMain : Form
         var storedTexture = await _dataService.GetTextureFileAsync(file, cancellationToken);
         storedTexture.FileHashMd5 = CryptoUtils.ComputeFileHash(file);
         storedTexture.IsProcessed = true;
+        storedTexture.FailureError = null;
+        storedTexture.IsFailed = false;
         await _dataService.UpdateTextureFileAsync(storedTexture, cancellationToken);
 
-        Invoke(() =>
+        GuiUtils.UpdateWorkerDetails(listProcessing, new TextureFileListItem
         {
-            GuiUtils.UpdateWorkerStatus(listProcessing, new TextureFileListItem
-            {
-                FilePath = storedTexture.FilePath,
-                Status = nameof(Status.Finished),
-                FileHashMd5 = storedTexture.FileHashMd5,
-                IsProcessed = storedTexture.IsProcessed
-            });
-            stripStatus.Text = $"Processed: {_processedFiles++} of {_totalFiles}";
-        });
+            FilePath = storedTexture.FilePath,
+            Status = nameof(Status.Finished),
+            FileHashMd5 = storedTexture.FileHashMd5,
+            IsProcessed = storedTexture.IsProcessed
+        }, Color.Black);
+        stripStatus.Text = $"Processed: {_processedFiles++} of {_totalFiles}";
     }
 
-    private async Task OnWorkerServiceProgress(string file, string message, CancellationToken cancellationToken)
+    private void OnWorkerServiceProgress(string file, string message)
     {
-        var storedTexture = await _dataService.GetTextureFileAsync(file, cancellationToken);
-        Invoke(() =>
-        {
-            GuiUtils.UpdateWorkerStatus(listProcessing, new TextureFileListItem
-            {
-                FilePath = storedTexture.FilePath,
-                Status = message,
-                FileHashMd5 = storedTexture.FileHashMd5,
-                IsProcessed = storedTexture.IsProcessed
-            });
-        });
+        GuiUtils.UpdateWorkerStatus(listProcessing, file, message, Color.Black);
     }
 
     private async Task OnWorkerServiceError(string file, string message, CancellationToken cancellationToken)
     {
-        _logger.LogError("Error: {Error}, when processing {File}", message, file);
+        _logger.LogError("Error: {Message}, when processing {File}", message, file);
         var storedTexture = await _dataService.GetTextureFileAsync(file, cancellationToken);
         storedTexture.IsProcessed = false;
-        storedTexture.FileHashMd5 = string.Empty;
+        storedTexture.FileHashMd5 = null;
+        storedTexture.FailureError = message;
+        storedTexture.IsFailed = true;
         await _dataService.UpdateTextureFileAsync(storedTexture, cancellationToken);
 
-        Invoke(() =>
+        GuiUtils.UpdateWorkerDetails(listProcessing, new TextureFileListItem
         {
-            GuiUtils.UpdateWorkerStatus(listProcessing, new TextureFileListItem
-            {
-                FilePath = storedTexture.FilePath,
-                Status = message,
-                FileHashMd5 = storedTexture.FileHashMd5,
-                IsProcessed = storedTexture.IsProcessed
-            }, Color.Brown);
-        });
+            FilePath = storedTexture.FilePath,
+            Status = message,
+            FileHashMd5 = storedTexture.FileHashMd5,
+            IsProcessed = storedTexture.IsProcessed
+        }, Color.Brown);
+        stripFailedStatus.Text = $"Failed: {_failedFiles++} of {_totalFiles}";
     }
 
     #endregion
-    
+
     private void SetupStartProcessingControls()
     {
         StartProcessingTime = DateTime.Now;
@@ -161,11 +150,10 @@ public partial class FrmMain : Form
                     stripStatus.Text = "Finding textures with missing height maps...";
                 });
 
-                var excludedFolders = (await _dataService.GetExcludedFolderListAsync())
-                    .Select(f => f.FolderPath).ToList();
+                var exclusions = await _dataService.GetExclusionListAsync();
                 _logger.LogInformation("Extracting normals with missing height maps");
                 var normalsNoParallaxList = WorkerUtils
-                    .ExtractNormalsMissingParallax(txtGameLocation.Text, excludedFolders)
+                    .ExtractNormalsMissingParallax(txtGameLocation.Text, exclusions.Select(x => x.Pattern))
                     .OrderBy(x => x)
                     .ToList();
 
@@ -180,6 +168,7 @@ public partial class FrmMain : Form
                 {
                     _logger.LogInformation("No missing height maps found. Stopping...");
                     MessageBox.Show(
+                        this,
                         "No missing height maps found!",
                         "No textures",
                         MessageBoxButtons.OK,
@@ -190,12 +179,17 @@ public partial class FrmMain : Form
                 }
 
                 var storedTexturesItem = storedTextures
-                    .Select(t => new TextureFileListItem
+                    .Select(t =>
                     {
-                        FilePath = t.FilePath,
-                        Status = t.IsProcessed ? nameof(Status.Finished) : nameof(Status.None),
-                        FileHashMd5 = t.FileHashMd5,
-                        IsProcessed = t.IsProcessed
+                        var status = t.IsProcessed ? nameof(Status.Finished) : nameof(Status.None);
+                        status = t.IsFailed ? t.FailureError ?? "Unspecified error" : status;
+                        return new TextureFileListItem
+                        {
+                            FilePath = t.FilePath,
+                            Status = status,
+                            FileHashMd5 = t.FileHashMd5,
+                            IsProcessed = t.IsProcessed
+                        };
                     })
                     .OrderBy(t => t.FilePath)
                     .ToList();
@@ -230,12 +224,9 @@ public partial class FrmMain : Form
                     storedProcessedTextures.Count - processedTextures.Count);
                 var texturesListToProcess = storedTextures
                     .Except(processedTextures)
+                    .Where(t => checkReprocessFailed.Checked || !t.IsFailed)
                     .OrderBy(t => t.FilePath)
-                    .Select(t => new TextureFileListItem
-                    {
-                        FilePath = t.FilePath,
-                        Status = nameof(Status.None)
-                    }).ToList();
+                    .ToList();
 
                 _logger.LogInformation(
                     "Job Summary: Processed {Processed}, Processing {ToProcess}, Total {Total}",
@@ -259,12 +250,17 @@ public partial class FrmMain : Form
                 await texturesListToProcess.ParallelForEachAsync(
                     async (texture, token) =>
                     {
-                        await _workerService.ProcessNormalTextures(
-                            texture.FilePath,
-                            OutputLocation,
-                            txtGameLocation.Text,
-                            trackHeightIntensity.Value,
-                            token);
+                        await _workerService.ProcessNormalTextures(new WorkerService.WorkerArgs
+                        {
+                            File = texture.FilePath,
+                            GameDataLocation = txtGameLocation.Text,
+                            OutputLocation = OutputLocation,
+                            HeightIntensity = trackHeightIntensity.Value,
+                            HeightNumberPasses = trackHeightNumPasses.Value,
+                            HeightMaxSteps = trackHeightSteps.Value,
+                            SynchronizingObject = this,
+                            CancellationToken = token
+                        });
                     },
                     (int)numThreadsCount.Value,
                     CancellationTokenSrc.Token);
@@ -294,6 +290,7 @@ public partial class FrmMain : Form
                     progressLoading.Hide();
                     stripStatus.Text = "Process concluded";
                     MessageBox.Show(
+                        this,
                         "Install the output file in ModOrganizer and run PGPatcher (aka ParallaxGen) afterwards",
                         "Success",
                         MessageBoxButtons.OK,
@@ -307,7 +304,7 @@ public partial class FrmMain : Form
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error processing textures");
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -323,7 +320,7 @@ public partial class FrmMain : Form
 
                     SetupStopProcessingControls();
                 });
-                MessageBox.Show("Process stopped!", "Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, "Process stopped!", "Stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         });
     }
@@ -336,9 +333,10 @@ public partial class FrmMain : Form
         {
             _logger.LogWarning(
                 "Parent process name {ParentProcessName} is not {Mo2ProcessName}",
-                parentProcessName, 
+                parentProcessName,
                 Mo2ProcessName);
             MessageBox.Show(
+                this,
                 "Launch this application from Mod Organizer 2",
                 "Error",
                 MessageBoxButtons.OK,
@@ -349,13 +347,16 @@ public partial class FrmMain : Form
 
         // hide for now
         tabControl1.TabPages.Remove(pageModExclusions);
+        progressLoading.Location = new Point(
+            listProcessing.Location.X + (listProcessing.Width / 2) - (progressLoading.Width / 2),
+            listProcessing.Location.Y + (listProcessing.Height / 2) - (progressLoading.Height / 2));
 
         _logger.LogInformation("Loading settings");
         var settings = await _dataService.GetSettingsAsync();
-        var excludedFolders = await _dataService.GetExcludedFolderListAsync();
-        foreach (var folder in excludedFolders)
+        var exclusions = await _dataService.GetExclusionListAsync();
+        foreach (var exclusion in exclusions)
         {
-            listExcludedFolders.Items.Add(folder.FolderPath);
+            listExclusions.Items.Add(exclusion.Pattern);
         }
 
         if (string.IsNullOrWhiteSpace(settings.GameDataFolderLocation))
@@ -377,30 +378,52 @@ public partial class FrmMain : Form
         txtGameLocation.Text = !string.IsNullOrWhiteSpace(settings.GameDataFolderLocation)
             ? settings.GameDataFolderLocation
             : "Set game data location folder...";
-        txtHeightIntensity.Text = settings.HeightMapIntensity.ToString();
         trackHeightIntensity.Value = settings.HeightMapIntensity;
+        trackHeightNumPasses.Value = settings.HeightMapPasses;
+        trackHeightSteps.Value = settings.HeightMapMaxSteps;
+        txtHeightIntensity.Text = settings.HeightMapIntensity.ToString();
+        txtHeightPasses.Text = settings.HeightMapPasses.ToString();
+        txtHeightSteps.Text = settings.HeightMapMaxSteps.ToString();
         numThreadsCount.Value = settings.MaxThreads;
         radioSyncOutputFolder.Checked = settings.SyncOutputFolder;
         radioRemoveOutputFolder.Checked = !settings.SyncOutputFolder;
+        checkReprocessFailed.Checked = settings.ReprocessFailedTextures;
 
         _logger.LogInformation("Loading textures list");
-        var storedTextures = (await _dataService.GetTextureFilesAsync())
-            .Select(t => new TextureFileListItem
+        var storedTextures = await _dataService.GetTextureFileListAsync();
+        stripStatus.Text = $"Processed: {storedTextures.Count(t => t.IsProcessed)} of {storedTextures.Count}";
+        var textureFileList = storedTextures
+            .Select(t =>
             {
-                FilePath = t.FilePath,
-                Status = t.IsProcessed ? nameof(Status.Finished) : nameof(Status.None),
-                FileHashMd5 = t.FileHashMd5,
-                IsProcessed = t.IsProcessed
+                var status = t.IsProcessed ? nameof(Status.Finished) : nameof(Status.None);
+                status = t.IsFailed ? t.FailureError ?? "Unspecified error" : status;
+                return new TextureFileListItem
+                {
+                    FilePath = t.FilePath,
+                    Status = status,
+                    FileHashMd5 = t.FileHashMd5,
+                    IsProcessed = t.IsProcessed
+                };
             })
             .OrderBy(t => t.FilePath)
             .ToList();
 
-        GuiUtils.UpdateListViewItems(listProcessing, storedTextures);
-        stripStatus.Text = $"Processed: {storedTextures.Count(t => t.IsProcessed ?? false)} of {storedTextures.Count}";
+        GuiUtils.UpdateListViewItems(listProcessing, textureFileList);
     }
 
     private async void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
     {
+        _logger.LogInformation("Saving settings");
+        var settings = await _dataService.GetSettingsAsync();
+        settings.HeightMapIntensity = trackHeightIntensity.Value;
+        settings.HeightMapPasses = trackHeightNumPasses.Value;
+        settings.HeightMapMaxSteps = trackHeightSteps.Value;
+        settings.MaxThreads = (int)numThreadsCount.Value;
+        settings.GameDataFolderLocation = txtGameLocation.Text;
+        settings.SyncOutputFolder = radioSyncOutputFolder.Checked;
+        settings.ReprocessFailedTextures = checkReprocessFailed.Checked;
+        await _dataService.UpdateSettings(settings);
+
         _logger.LogInformation("Closing application");
         if (!_isProcessing) return;
 
@@ -424,6 +447,9 @@ public partial class FrmMain : Form
 
     private void txtHeightIntensity_KeyPress(object sender, KeyPressEventArgs e)
     {
+        if (char.IsDigit(e.KeyChar) ||
+            e.KeyChar == (char)Keys.Back ||
+            (e.KeyChar == '-' && !txtHeightIntensity.Text.Contains('-'))) return;
         e.Handled = true;
     }
 
@@ -439,9 +465,10 @@ public partial class FrmMain : Form
 
     private void numThreadsCount_KeyPress(object sender, KeyPressEventArgs e)
     {
+        if (char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back) return;
         e.Handled = true;
     }
-    
+
     private void txtModsLocation_Click(object sender, EventArgs e)
     {
         if (dlgInputFolder.ShowDialog() == DialogResult.OK)
@@ -465,7 +492,7 @@ public partial class FrmMain : Form
         if (!File.Exists(selectedFile))
         {
             _logger.LogInformation("Can't preview, the file {File} doesn't exist", selectedFile);
-            MessageBox.Show("The file doesn't exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, "The file doesn't exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -483,6 +510,7 @@ public partial class FrmMain : Form
         {
             _logger.LogInformation("The height map hasn't been created yet or doesn't exist");
             MessageBox.Show(
+                this,
                 "The height map hasn't been created yet or doesn't exist!",
                 "Error",
                 MessageBoxButtons.OK,
@@ -490,7 +518,7 @@ public partial class FrmMain : Form
             return;
         }
 
-        await ProcessUtils.ExecuteProcess("explorer.exe", $"\"{destinationFolder}\"", fireAndForget: true);
+        await ProcessUtils.ExecuteProcessAsync("explorer.exe", $"\"{destinationFolder}\"", fireAndForget: true);
     }
 
     private async void txtExcludedFolder_KeyPress(object sender, KeyPressEventArgs e)
@@ -499,10 +527,21 @@ public partial class FrmMain : Form
 
         if (!string.IsNullOrWhiteSpace(txtExcludedFolder.Text))
         {
-            listExcludedFolders.Items.Add(txtExcludedFolder.Text);
-            await _dataService.AddExcludedFolderAsync(new ExcludedFolder
+            if (!StringUtils.IsValidRegexPattern(txtExcludedFolder.Text))
             {
-                FolderPath = txtExcludedFolder.Text
+                MessageBox.Show(
+                    this,
+                    "Exclusions are regex based. Enter a valid regex pattern",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            listExclusions.Items.Add(txtExcludedFolder.Text);
+            await _dataService.AddExclusionAsync(new Exclusions
+            {
+                Pattern = txtExcludedFolder.Text
             });
             txtExcludedFolder.Clear();
             txtExcludedFolder.Focus();
@@ -512,30 +551,31 @@ public partial class FrmMain : Form
 
     private async void deleteToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        var foldersToExclude = new List<string>();
-        foreach (ListViewItem item in listExcludedFolders.SelectedItems)
+        var exclusionPatterns = new List<string>();
+        foreach (ListViewItem item in listExclusions.SelectedItems)
         {
-            listExcludedFolders.Items.Remove(item);
-            foldersToExclude.Add(item.Text);
+            listExclusions.Items.Remove(item);
+            exclusionPatterns.Add(item.Text);
         }
 
-        await _dataService.RemoveExcludedFolderListAsync(foldersToExclude);
+        await _dataService.RemoveExclusionListAsync(exclusionPatterns);
     }
 
-    private async void btnSaveSettings_Click(object sender, EventArgs e)
+    private void copyToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        var settings = await _dataService.GetSettingsAsync();
-        settings.HeightMapIntensity = trackHeightIntensity.Value;
-        settings.MaxThreads = (int)numThreadsCount.Value;
-        settings.GameDataFolderLocation = txtGameLocation.Text;
-        settings.SyncOutputFolder = radioSyncOutputFolder.Checked;
-        await _dataService.UpdateSettings(settings);
-        MessageBox.Show("Settings saved!", "Settings", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        var exclusionPatterns = new List<string>();
+        foreach (ListViewItem item in listExclusions.SelectedItems)
+        {
+            exclusionPatterns.Add(item.Text);
+        }
+
+        Clipboard.SetText(string.Join(Environment.NewLine, exclusionPatterns));
     }
 
     private void btnReset_Click(object sender, EventArgs e)
     {
         if (MessageBox.Show(
+                this,
                 "Are you sure you want to reset settings to default?", "Reset settings",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning) != DialogResult.Yes)
@@ -543,14 +583,17 @@ public partial class FrmMain : Form
 
         var settings = new Settings();
         trackHeightIntensity.Value = settings.HeightMapIntensity;
+        trackHeightNumPasses.Value = settings.HeightMapPasses;
+        trackHeightSteps.Value = settings.HeightMapMaxSteps;
         numThreadsCount.Value = settings.MaxThreads;
-        radioSyncOutputFolder.Checked = true;
-        radioRemoveOutputFolder.Checked = false;
+        radioSyncOutputFolder.Checked = settings.SyncOutputFolder;
+        radioRemoveOutputFolder.Checked = !settings.SyncOutputFolder;
+        checkReprocessFailed.Checked = settings.ReprocessFailedTextures;
     }
 
     private void ctxExcludedFolders_Opening(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        ctxExcludedFolders.Enabled = listExcludedFolders.SelectedItems.Count >= 1;
+        ctxExclusions.Enabled = listExclusions.SelectedItems.Count >= 1;
     }
 
     private async void excludeFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -565,12 +608,32 @@ public partial class FrmMain : Form
             .Select(file => FileSystemUtils.ToTexturePath(file, txtGameLocation.Text))
             .Distinct();
 
-        await _dataService.AddExcludedFolderListAsync(foldersToExclude
-            .Select(f => new ExcludedFolder { FolderPath = f }));
-        var excludedFolders = await _dataService.GetExcludedFolderListAsync();
+        await _dataService.AddExclusionListAsync(foldersToExclude
+            .Select(f => new Exclusions { Pattern = f.Replace(@"\", @"\\") }));
+        var exclusions = await _dataService.GetExclusionListAsync();
         GuiUtils.UpdateListViewItems(
-            listExcludedFolders, 
-            excludedFolders.Select(f => f.FolderPath).ToList());
+            listExclusions,
+            exclusions.Select(f => f.Pattern).ToList());
+    }
+
+    private async void excludeFilesMenuItem_Click(object sender, EventArgs e)
+    {
+        var selectedFiles = new List<string>();
+        foreach (ListViewItem item in listProcessing.SelectedItems)
+        {
+            selectedFiles.Add(item.Text);
+        }
+
+        var filesToExclude = selectedFiles
+            .Select(file => FileSystemUtils.ToTextureFilePath(file, txtGameLocation.Text))
+            .Distinct();
+
+        await _dataService.AddExclusionListAsync(filesToExclude
+            .Select(f => new Exclusions { Pattern = f.Replace(@"\", @"\\") }));
+        var exclusions = await _dataService.GetExclusionListAsync();
+        GuiUtils.UpdateListViewItems(
+            listExclusions,
+            exclusions.Select(f => f.Pattern).ToList());
     }
 
     private void timerProcess_Tick(object sender, EventArgs e)
@@ -618,6 +681,7 @@ public partial class FrmMain : Form
     private async void btnClearCache_Click(object sender, EventArgs e)
     {
         if (MessageBox.Show(
+                this,
                 "Are you sure you want to clear the cache?. The output folder and textures cache will be removed",
                 "Clear cache",
                 MessageBoxButtons.YesNo,
@@ -633,16 +697,81 @@ public partial class FrmMain : Form
 
             listProcessing.Items.Clear();
             stripStatus.Text = "Cache cleared";
-            MessageBox.Show("Cache cleared!", "Cache", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, "Cache cleared!", "Cache", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception exception)
         {
             _logger.LogError(exception, "Error clearing cache");
             MessageBox.Show(
+                this,
                 "Error clearing cache. Check the log file for more details",
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
+        }
+    }
+
+    private void trackHeightNumPasses_ValueChanged(object sender, EventArgs e)
+    {
+        txtHeightPasses.Text = trackHeightNumPasses.Value.ToString();
+    }
+
+    private void trackHeightSteps_ValueChanged(object sender, EventArgs e)
+    {
+        txtHeightSteps.Text = trackHeightSteps.Value.ToString();
+    }
+
+    private void txtHeightPasses_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        if (char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back) return;
+        e.Handled = true;
+    }
+
+    private void txtHeightSteps_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        if (char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back) return;
+        e.Handled = true;
+    }
+
+    private void txtHeightIntensity_Leave(object sender, EventArgs e)
+    {
+        if (int.TryParse(txtHeightIntensity.Text, out var value))
+        {
+            if (value < trackHeightIntensity.Minimum)
+                value = trackHeightIntensity.Minimum;
+            else if (value > trackHeightIntensity.Maximum)
+                value = trackHeightIntensity.Maximum;
+
+            trackHeightIntensity.Value = value;
+            txtHeightIntensity.Text = value.ToString();
+        }
+    }
+
+    private void txtHeightPasses_Leave(object sender, EventArgs e)
+    {
+        if (int.TryParse(txtHeightPasses.Text, out var value))
+        {
+            if (value < trackHeightNumPasses.Minimum)
+                value = trackHeightNumPasses.Minimum;
+            else if (value > trackHeightNumPasses.Maximum)
+                value = trackHeightNumPasses.Maximum;
+
+            trackHeightNumPasses.Value = value;
+            txtHeightPasses.Text = value.ToString();
+        }
+    }
+
+    private void txtHeightSteps_Leave(object sender, EventArgs e)
+    {
+        if (int.TryParse(txtHeightSteps.Text, out var value))
+        {
+            if (value < trackHeightSteps.Minimum)
+                value = trackHeightSteps.Minimum;
+            else if (value > trackHeightSteps.Maximum)
+                value = trackHeightSteps.Maximum;
+
+            trackHeightSteps.Value = value;
+            txtHeightSteps.Text = value.ToString();
         }
     }
 }

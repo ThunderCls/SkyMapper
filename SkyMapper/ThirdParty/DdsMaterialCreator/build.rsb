@@ -1,0 +1,23 @@
+use std::env;
+use std::fs;
+use std::path::Path;
+
+fn main() {
+    let out_dir = env::var("OUT_DIR").unwrap();    
+    let target_dir = Path::new(&out_dir).parent().unwrap().parent().unwrap().parent().unwrap();
+    let dll_path = target_dir.join("dds_material_creator.dll");
+    let root_path = Path::new(&out_dir).parent().unwrap().parent().unwrap().parent().unwrap().parent().unwrap().parent().unwrap().parent().unwrap();
+    let root_dll_path = root_path.join("dds_material_creator.dll");
+
+    // Check if the DLL exists before copying
+    if !dll_path.exists() {
+        panic!(
+            "DLL not found at {}. Ensure the build process has completed successfully.",
+            dll_path.display()
+        );
+    }
+
+    // Show a message to the user with the from/to paths
+    println!("cargo:warning=Copying DLL from {} to {}", dll_path.display(), root_dll_path.display());
+    fs::copy(dll_path, root_dll_path).expect("Failed to copy DLL to root folder");
+}

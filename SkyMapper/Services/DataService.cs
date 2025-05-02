@@ -20,31 +20,40 @@ public class DataService
         _dbContextFactory = dbContextFactory;
     }
 
-    public async Task<List<ExcludedFolder>> GetExcludedFolderListAsync(CancellationToken cancellationToken = default)
+    public async Task<List<Exclusions>> GetExclusionListAsync(CancellationToken cancellationToken = default)
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-        return await context.ExcludedFolders.ToListAsync(cancellationToken);
+        return await context.Exclusions.ToListAsync(cancellationToken);
     }
 
-    public async Task AddExcludedFolderAsync(ExcludedFolder folder, CancellationToken cancellationToken = default)
+    public async Task AddExclusionAsync(Exclusions exclusion, CancellationToken cancellationToken = default)
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-        context.ExcludedFolders.Add(folder);
+        context.Exclusions.Add(exclusion);
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task RemoveExcludedFolderListAsync(
-        List<string> folderList, 
+    public async Task AddExclusionListAsync(
+        IEnumerable<Exclusions> exclusions,
         CancellationToken cancellationToken = default)
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-        var existingFolderList = await context.ExcludedFolders
-            .Where(f => folderList.Contains(f.FolderPath))
+        context.Exclusions.AddRange(exclusions);
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task RemoveExclusionListAsync(
+        List<string> exclusionList, 
+        CancellationToken cancellationToken = default)
+    {
+        await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
+        var existingFolderList = await context.Exclusions
+            .Where(f => exclusionList.Contains(f.Pattern))
             .ToListAsync(cancellationToken);
         if (!existingFolderList.Any())
             return;
 
-        context.ExcludedFolders.RemoveRange(existingFolderList);
+        context.Exclusions.RemoveRange(existingFolderList);
         await context.SaveChangesAsync(cancellationToken);
     }
 
@@ -61,10 +70,16 @@ public class DataService
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<List<TextureFile>> GetTextureFilesAsync(CancellationToken cancellationToken = default)
+    public async Task<List<TextureFile>> GetTextureFileListAsync(CancellationToken cancellationToken = default)
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
         return await context.TextureFiles.ToListAsync(cancellationToken);
+    }
+
+    public async Task<TextureFile> GetTextureFileAsync(string textureFile, CancellationToken cancellationToken = default)
+    {
+        await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
+        return await context.TextureFiles.FirstAsync(f => f.FilePath == textureFile, cancellationToken);
     }
 
     public async Task AddTextureFileListAsync(
@@ -91,21 +106,6 @@ public class DataService
         context.TextureFiles.Update(textureFile);
         await context.SaveChangesAsync(cancellationToken);
     }
-
-    public async Task<TextureFile> GetTextureFileAsync(string textureFile, CancellationToken cancellationToken = default)
-    {
-        await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-        return await context.TextureFiles.FirstAsync(f => f.FilePath == textureFile, cancellationToken);
-    }
-
-    internal async Task AddExcludedFolderListAsync(
-        IEnumerable<ExcludedFolder> folders, 
-        CancellationToken cancellationToken = default)
-    {
-        await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-        context.ExcludedFolders.AddRange(folders);
-        await context.SaveChangesAsync(cancellationToken);
-    }
     
     public async Task ClearTextureFilesAsync()
     {
@@ -120,7 +120,7 @@ public class DataService
         string outputLocation,
         bool syncOutput = true)
     {
-        var storedTextures = await GetTextureFilesAsync();
+        var storedTextures = await GetTextureFileListAsync();
         var missingTextures = normalsNoParallaxList
             .Where(t => !storedTextures.Any(s =>
                 string.Equals(s.FilePath, t, StringComparison.OrdinalIgnoreCase)))
@@ -169,6 +169,6 @@ public class DataService
             }
         }
 
-        return await GetTextureFilesAsync();
+        return await GetTextureFileListAsync();
     }
 }

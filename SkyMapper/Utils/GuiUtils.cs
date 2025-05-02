@@ -6,6 +6,7 @@ namespace SkyMapper.Utils;
 public static class GuiUtils
 {
     private const int MF_BYPOSITION = 0x400;
+    
     [DllImport("User32")]
     private static extern int RemoveMenu(IntPtr hMenu, int nPosition, int wFlags);
     [DllImport("User32")]
@@ -58,7 +59,7 @@ public static class GuiUtils
         }
     }
     
-    public static void UpdateWorkerStatus(ListView listView, TextureFileListItem fileItem, Color? rowColor = null)
+    public static void UpdateWorkerDetails(ListView listView, TextureFileListItem fileItem, Color? rowColor = null)
     {
         var listEntry = listView.Items.Find(fileItem.FilePath, false).FirstOrDefault();
         if (listEntry is not null)
@@ -93,6 +94,20 @@ public static class GuiUtils
         if (rowColor is not null)
             listEntry.ForeColor = rowColor.Value;
         listView.Items.Add(listEntry);
+    }
+    
+    public static void UpdateWorkerStatus(ListView listView, string file, string status, Color? rowColor = null)
+    {
+        var listEntry = listView.Items.Find(file, false).FirstOrDefault();
+        if (listEntry is null) return;
+        
+        if (rowColor is not null)
+            listEntry.ForeColor = rowColor.Value;
+
+        if (listEntry.SubItems.Count > 1)
+        {
+            listEntry.SubItems[1].Text = status;
+        }
     }
     
     public static void DisableCloseButton(IntPtr handle)

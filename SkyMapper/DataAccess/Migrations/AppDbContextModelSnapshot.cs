@@ -16,60 +16,100 @@ namespace SkyMapper.DataAccess.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.15");
 
-            modelBuilder.Entity("SkyMapper.DataAccess.Models.ExcludedFolder", b =>
+            modelBuilder.Entity("SkyMapper.DataAccess.Models.Exclusions", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("FolderPath")
+                    b.Property<string>("Pattern")
                         .IsRequired()
                         .HasColumnType("varchar(500)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ExcludedFolders");
+                    b.ToTable("Exclusions");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            FolderPath = "textures\\lod"
+                            Pattern = "textures\\\\lod\\\\"
                         },
                         new
                         {
                             Id = 2,
-                            FolderPath = "textures\\interface"
+                            Pattern = "textures\\\\interface\\\\"
                         },
                         new
                         {
                             Id = 3,
-                            FolderPath = "textures\\DynDOLOD"
+                            Pattern = "textures\\\\DynDOLOD\\\\"
                         },
                         new
                         {
                             Id = 4,
-                            FolderPath = "textures\\actors\\character\\facegendata"
+                            Pattern = "textures\\\\terrain\\\\"
                         },
                         new
                         {
                             Id = 5,
-                            FolderPath = "textures\\chargen"
+                            Pattern = "textures\\\\.*\\\\chargen\\\\"
                         },
                         new
                         {
                             Id = 6,
-                            FolderPath = "textures\\cubemap"
+                            Pattern = "textures\\\\.*\\\\cubemap.*\\\\"
                         },
                         new
                         {
                             Id = 7,
-                            FolderPath = "textures\\cubemaps"
+                            Pattern = "textures\\\\.*\\\\facegen.*\\\\"
                         },
                         new
                         {
                             Id = 8,
-                            FolderPath = "textures\\terrain"
+                            Pattern = "textures\\\\.*\\\\*hair.*\\\\"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Pattern = "textures\\\\.*\\\\*brow.*\\\\"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Pattern = "textures\\\\.*\\\\mouth\\\\"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Pattern = "textures\\\\.*\\\\*eyes\\\\"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Pattern = "textures\\\\.*\\\\*beard.*\\\\"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Pattern = "textures\\\\.*\\\\*lashes\\\\"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Pattern = "textures\\\\.*\\\\*gash\\\\"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Pattern = "textures\\\\.*\\\\*tattoo\\\\"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Pattern = "textures\\\\.*\\\\*skin.*\\\\"
                         });
                 });
 
@@ -85,7 +125,16 @@ namespace SkyMapper.DataAccess.Migrations
                     b.Property<int>("HeightMapIntensity")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("HeightMapMaxSteps")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("HeightMapPasses")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("MaxThreads")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ReprocessFailedTextures")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("SyncOutputFolder")
@@ -94,15 +143,6 @@ namespace SkyMapper.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Settings");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            HeightMapIntensity = -88,
-                            MaxThreads = 5,
-                            SyncOutputFolder = true
-                        });
                 });
 
             modelBuilder.Entity("SkyMapper.DataAccess.Models.TextureFile", b =>
@@ -111,12 +151,18 @@ namespace SkyMapper.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("FailureError")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("FileHashMd5")
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("FilePath")
                         .IsRequired()
                         .HasColumnType("varchar(500)");
+
+                    b.Property<bool>("IsFailed")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsProcessed")
                         .HasColumnType("INTEGER");

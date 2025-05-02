@@ -1,0 +1,32 @@
+[package]
+name = "dds_material_creator"
+version = "0.1.0"
+edition = "2021"
+#build = "build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "dds_material_creator"
+crate-type = ["cdylib"]
+# enable for testing only
+#crate-type = ["rlib"]
+#path = "src/lib.rs"
+
+# enable for testing only
+#[[bin]]
+#name = "test_dds_material_creator"
+#path = "src/bin/test.rs"
+
+[dependencies]
+argh = "0.1.12"
+image = "0.24.7"
+image_dds = { version = "0.2.0", features = ["serde"] }
+
+# Enable a small amount of optimization in debug mode
+[profile.dev]
+opt-level = 1
+
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package."*"]
+opt-level = 3

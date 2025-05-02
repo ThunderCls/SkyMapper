@@ -5,7 +5,51 @@ namespace SkyMapper.Utils;
 
 public static class ProcessUtils
 {
-    public static async Task ExecuteProcess(
+    public static Task<int> ExecuteProcessAsync(
+        string fileName, 
+        string arguments,
+        Form synchronizingObject,
+        Action<string>? progressAction = null,
+        Func<string, Task>? errorAction = null)
+    {
+        var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            }
+        };
+        process.EnableRaisingEvents = true;
+        process.SynchronizingObject = synchronizingObject;
+        var tcs = new TaskCompletionSource<int>();
+        process.Exited += (_, _) => tcs.SetResult(process.ExitCode);
+        process.OutputDataReceived += (_, dataReceivedArgs) =>
+        {
+            if (!string.IsNullOrWhiteSpace(dataReceivedArgs.Data))
+                progressAction?.Invoke(dataReceivedArgs.Data);
+        };
+        process.ErrorDataReceived += (_, dataReceivedArgs) =>
+        {
+            if (process.ExitCode != 0)
+                errorAction?.Invoke($"Process error exit code: 0x{process.ExitCode:x8}. Details: " +
+                                    $"{dataReceivedArgs.Data ?? "No additional error information"}");
+        };
+        
+        if (!process.Start())
+            tcs.SetResult(-1);
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+        return tcs.Task;
+    }
+    
+    public static async Task ExecuteProcessAsync(
         string fileName, 
         string arguments, 
         bool hidden = false, 
@@ -31,7 +75,6 @@ public static class ProcessUtils
             await process.WaitForExitAsync();
             if (process.ExitCode != 0)
             {
-                Debug.WriteLine($"{fileName} failed with exit code 0x{process.ExitCode:x8}: {error}");
                 throw new ApplicationException($"Failed to create process with exit code 0x{process.ExitCode:x8}");
             }
         }

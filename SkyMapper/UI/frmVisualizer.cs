@@ -31,7 +31,7 @@ public partial class FrmVisualizer : Form
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error on image preview");
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             Close();
         }
     }

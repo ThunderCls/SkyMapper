@@ -1,10 +1,14 @@
 ﻿using System.Diagnostics;
 using System.IO.Compression;
+using Microsoft.Extensions.Logging;
+using SkyMapper.Services;
 
 namespace SkyMapper.Utils;
 
 public static class CompressorUtils
 {
+    private static ILogger<WorkerService> Logger => ServiceLocator.LocateService<ILogger<WorkerService>>();
+    
     public static async Task CreateZipArchiveAsync(
         string sourceFolder, 
         string zipFileName, 
@@ -27,7 +31,7 @@ public static class CompressorUtils
         }
         catch (Exception e)
         {
-            Debug.WriteLine($"Error creating ZIP archive: {e}");
+            Logger.LogError(e, "Error creating ZIP archive");
             throw;
         }
     }

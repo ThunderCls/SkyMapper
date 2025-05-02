@@ -31,96 +31,115 @@ partial class FrmMain
     {
         components = new System.ComponentModel.Container();
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-        dlgInputFolder = new System.Windows.Forms.FolderBrowserDialog();
-        statusStrip1 = new System.Windows.Forms.StatusStrip();
-        stripStatus = new System.Windows.Forms.ToolStripStatusLabel();
-        stripTimer = new System.Windows.Forms.ToolStripStatusLabel();
-        dlgOutputFolder = new System.Windows.Forms.FolderBrowserDialog();
-        tabControl1 = new System.Windows.Forms.TabControl();
-        tabProcessing = new System.Windows.Forms.TabPage();
-        progressLoading = new System.Windows.Forms.ProgressBar();
-        btnStop = new System.Windows.Forms.Button();
-        btnStart = new System.Windows.Forms.Button();
-        listProcessing = new System.Windows.Forms.ListView();
-        columnHeader1 = new System.Windows.Forms.ColumnHeader();
-        columnHeader2 = new System.Windows.Forms.ColumnHeader();
-        columnHeader9 = new System.Windows.Forms.ColumnHeader();
-        columnHeader10 = new System.Windows.Forms.ColumnHeader();
-        ctxProcessing = new System.Windows.Forms.ContextMenuStrip(components);
-        openNormalMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        openHeightMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem12 = new System.Windows.Forms.ToolStripSeparator();
-        copyFilePathMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        filePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        statusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        lineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        excludeFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        tabSettings = new System.Windows.Forms.TabPage();
-        groupBox1 = new System.Windows.Forms.GroupBox();
-        radioSyncOutputFolder = new System.Windows.Forms.RadioButton();
-        radioRemoveOutputFolder = new System.Windows.Forms.RadioButton();
-        btnClearCache = new System.Windows.Forms.Button();
-        btnReset = new System.Windows.Forms.Button();
-        btnSaveSettings = new System.Windows.Forms.Button();
-        txtHeightIntensity = new System.Windows.Forms.TextBox();
-        trackHeightIntensity = new System.Windows.Forms.TrackBar();
-        label2 = new System.Windows.Forms.Label();
-        numThreadsCount = new System.Windows.Forms.NumericUpDown();
-        label1 = new System.Windows.Forms.Label();
-        txtGameLocation = new System.Windows.Forms.TextBox();
-        pageFolderExclusions = new System.Windows.Forms.TabPage();
-        txtExcludedFolder = new System.Windows.Forms.TextBox();
-        listExcludedFolders = new System.Windows.Forms.ListView();
-        columnHeader8 = new System.Windows.Forms.ColumnHeader();
-        ctxExcludedFolders = new System.Windows.Forms.ContextMenuStrip(components);
-        deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        pageModExclusions = new System.Windows.Forms.TabPage();
-        splitContainer1 = new System.Windows.Forms.SplitContainer();
-        lstModList = new System.Windows.Forms.ListView();
-        columnHeader5 = new System.Windows.Forms.ColumnHeader();
-        columnHeader3 = new System.Windows.Forms.ColumnHeader();
-        columnHeader4 = new System.Windows.Forms.ColumnHeader();
-        ctxModList = new System.Windows.Forms.ContextMenuStrip(components);
-        excludeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        includeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-        excludeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-        includeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-        txtModsLocation = new System.Windows.Forms.TextBox();
-        splitContainer2 = new System.Windows.Forms.SplitContainer();
-        listView1 = new System.Windows.Forms.ListView();
-        columnHeader6 = new System.Windows.Forms.ColumnHeader();
-        ctxExcludedMods = new System.Windows.Forms.ContextMenuStrip(components);
-        toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-        toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-        listView2 = new System.Windows.Forms.ListView();
-        columnHeader7 = new System.Windows.Forms.ColumnHeader();
-        ctxIncludedMods = new System.Windows.Forms.ContextMenuStrip(components);
-        toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-        toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripMenuItem13 = new System.Windows.Forms.ToolStripMenuItem();
-        toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-        toolStripMenuItem14 = new System.Windows.Forms.ToolStripMenuItem();
+        dlgInputFolder = new FolderBrowserDialog();
+        statusStrip1 = new StatusStrip();
+        stripStatus = new ToolStripStatusLabel();
+        stripFailedStatus = new ToolStripStatusLabel();
+        stripTimer = new ToolStripStatusLabel();
+        dlgOutputFolder = new FolderBrowserDialog();
+        tabControl1 = new TabControl();
+        tabProcessing = new TabPage();
+        progressLoading = new ProgressBar();
+        btnStop = new Button();
+        btnStart = new Button();
+        listProcessing = new ListView();
+        columnHeader1 = new ColumnHeader();
+        columnHeader2 = new ColumnHeader();
+        columnHeader9 = new ColumnHeader();
+        columnHeader10 = new ColumnHeader();
+        ctxProcessing = new ContextMenuStrip(components);
+        openNormalMenuItem = new ToolStripMenuItem();
+        openHeightMenuItem = new ToolStripMenuItem();
+        toolStripMenuItem12 = new ToolStripSeparator();
+        excludeFolderMenuItem = new ToolStripMenuItem();
+        excludeFilesMenuItem = new ToolStripMenuItem();
+        toolStripMenuItem16 = new ToolStripSeparator();
+        copyFilePathMenuItem = new ToolStripMenuItem();
+        filePathToolStripMenuItem = new ToolStripMenuItem();
+        statusToolStripMenuItem = new ToolStripMenuItem();
+        hashToolStripMenuItem = new ToolStripMenuItem();
+        lineToolStripMenuItem = new ToolStripMenuItem();
+        tabSettings = new TabPage();
+        checkReprocessFailed = new CheckBox();
+        groupBox2 = new GroupBox();
+        trackHeightIntensity = new TrackBar();
+        trackHeightSteps = new TrackBar();
+        label2 = new Label();
+        txtHeightSteps = new TextBox();
+        txtHeightIntensity = new TextBox();
+        label4 = new Label();
+        label3 = new Label();
+        trackHeightNumPasses = new TrackBar();
+        txtHeightPasses = new TextBox();
+        groupBox1 = new GroupBox();
+        radioSyncOutputFolder = new RadioButton();
+        radioRemoveOutputFolder = new RadioButton();
+        btnClearCache = new Button();
+        btnReset = new Button();
+        numThreadsCount = new NumericUpDown();
+        label1 = new Label();
+        txtGameLocation = new TextBox();
+        pageExclusions = new TabPage();
+        txtExcludedFolder = new TextBox();
+        listExclusions = new ListView();
+        columnHeader8 = new ColumnHeader();
+        ctxExclusions = new ContextMenuStrip(components);
+        copyToolStripMenuItem = new ToolStripMenuItem();
+        toolStripMenuItem19 = new ToolStripSeparator();
+        deleteToolStripMenuItem = new ToolStripMenuItem();
+        pageModExclusions = new TabPage();
+        splitContainer1 = new SplitContainer();
+        lstModList = new ListView();
+        columnHeader5 = new ColumnHeader();
+        columnHeader3 = new ColumnHeader();
+        columnHeader4 = new ColumnHeader();
+        ctxModList = new ContextMenuStrip(components);
+        excludeToolStripMenuItem = new ToolStripMenuItem();
+        includeToolStripMenuItem = new ToolStripMenuItem();
+        toolStripMenuItem1 = new ToolStripSeparator();
+        excludeToolStripMenuItem1 = new ToolStripMenuItem();
+        includeToolStripMenuItem1 = new ToolStripMenuItem();
+        txtModsLocation = new TextBox();
+        splitContainer2 = new SplitContainer();
+        listView1 = new ListView();
+        columnHeader6 = new ColumnHeader();
+        ctxExcludedMods = new ContextMenuStrip(components);
+        toolStripMenuItem2 = new ToolStripMenuItem();
+        toolStripMenuItem3 = new ToolStripMenuItem();
+        toolStripSeparator1 = new ToolStripSeparator();
+        toolStripMenuItem4 = new ToolStripMenuItem();
+        listView2 = new ListView();
+        columnHeader7 = new ColumnHeader();
+        ctxIncludedMods = new ContextMenuStrip(components);
+        toolStripMenuItem5 = new ToolStripMenuItem();
+        toolStripMenuItem6 = new ToolStripMenuItem();
+        toolStripSeparator2 = new ToolStripSeparator();
+        toolStripMenuItem7 = new ToolStripMenuItem();
+        toolStripMenuItem8 = new ToolStripMenuItem();
+        toolStripMenuItem9 = new ToolStripMenuItem();
+        toolStripMenuItem10 = new ToolStripMenuItem();
+        toolStripMenuItem11 = new ToolStripMenuItem();
+        toolStripMenuItem13 = new ToolStripMenuItem();
+        toolStripSeparator3 = new ToolStripSeparator();
+        toolStripMenuItem14 = new ToolStripMenuItem();
         timerProcess = new System.Windows.Forms.Timer(components);
+        toolStripMenuItem15 = new ToolStripMenuItem();
+        toolTipHeightNumPasses = new ToolTip(components);
+        toolStripMenuItem17 = new ToolStripMenuItem();
+        toolStripMenuItem18 = new ToolStripMenuItem();
         statusStrip1.SuspendLayout();
         tabControl1.SuspendLayout();
         tabProcessing.SuspendLayout();
         ctxProcessing.SuspendLayout();
         tabSettings.SuspendLayout();
-        groupBox1.SuspendLayout();
+        groupBox2.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)trackHeightIntensity).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)trackHeightSteps).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)trackHeightNumPasses).BeginInit();
+        groupBox1.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)numThreadsCount).BeginInit();
-        pageFolderExclusions.SuspendLayout();
-        ctxExcludedFolders.SuspendLayout();
+        pageExclusions.SuspendLayout();
+        ctxExclusions.SuspendLayout();
         pageModExclusions.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
         splitContainer1.Panel1.SuspendLayout();
@@ -137,40 +156,46 @@ partial class FrmMain
         // 
         // statusStrip1
         // 
-        statusStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
-        statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-        statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { stripStatus, stripTimer });
-        statusStrip1.Location = new System.Drawing.Point(0, 783);
+        statusStrip1.GripStyle = ToolStripGripStyle.Visible;
+        statusStrip1.ImageScalingSize = new Size(20, 20);
+        statusStrip1.Items.AddRange(new ToolStripItem[] { stripStatus, stripFailedStatus, stripTimer });
+        statusStrip1.Location = new Point(0, 783);
         statusStrip1.Name = "statusStrip1";
-        statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
-        statusStrip1.Size = new System.Drawing.Size(1197, 22);
+        statusStrip1.Padding = new Padding(1, 0, 10, 0);
+        statusStrip1.Size = new Size(1234, 22);
         statusStrip1.TabIndex = 6;
         // 
         // stripStatus
         // 
-        stripStatus.Margin = new System.Windows.Forms.Padding(0, 3, 10, 2);
+        stripStatus.Margin = new Padding(0, 3, 10, 2);
         stripStatus.Name = "stripStatus";
-        stripStatus.Size = new System.Drawing.Size(0, 17);
+        stripStatus.Size = new Size(0, 17);
+        // 
+        // stripFailedStatus
+        // 
+        stripFailedStatus.Margin = new Padding(0, 4, 10, 2);
+        stripFailedStatus.Name = "stripFailedStatus";
+        stripFailedStatus.Size = new Size(0, 16);
         // 
         // stripTimer
         // 
-        stripTimer.Margin = new System.Windows.Forms.Padding(10, 3, 0, 2);
+        stripTimer.Margin = new Padding(10, 3, 0, 2);
         stripTimer.Name = "stripTimer";
-        stripTimer.Size = new System.Drawing.Size(0, 17);
-        stripTimer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+        stripTimer.Size = new Size(0, 17);
+        stripTimer.TextAlign = ContentAlignment.MiddleRight;
         // 
         // tabControl1
         // 
         tabControl1.Controls.Add(tabProcessing);
         tabControl1.Controls.Add(tabSettings);
-        tabControl1.Controls.Add(pageFolderExclusions);
+        tabControl1.Controls.Add(pageExclusions);
         tabControl1.Controls.Add(pageModExclusions);
-        tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-        tabControl1.Location = new System.Drawing.Point(0, 0);
-        tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        tabControl1.Dock = DockStyle.Fill;
+        tabControl1.Location = new Point(0, 0);
+        tabControl1.Margin = new Padding(3, 2, 3, 2);
         tabControl1.Name = "tabControl1";
         tabControl1.SelectedIndex = 0;
-        tabControl1.Size = new System.Drawing.Size(1197, 783);
+        tabControl1.Size = new Size(1234, 783);
         tabControl1.TabIndex = 0;
         // 
         // tabProcessing
@@ -179,36 +204,36 @@ partial class FrmMain
         tabProcessing.Controls.Add(btnStop);
         tabProcessing.Controls.Add(btnStart);
         tabProcessing.Controls.Add(listProcessing);
-        tabProcessing.Location = new System.Drawing.Point(4, 24);
-        tabProcessing.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        tabProcessing.Location = new Point(4, 24);
+        tabProcessing.Margin = new Padding(3, 2, 3, 2);
         tabProcessing.Name = "tabProcessing";
-        tabProcessing.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        tabProcessing.Size = new System.Drawing.Size(1189, 755);
+        tabProcessing.Padding = new Padding(3, 2, 3, 2);
+        tabProcessing.Size = new Size(1226, 755);
         tabProcessing.TabIndex = 0;
         tabProcessing.Text = "Processing";
         tabProcessing.UseVisualStyleBackColor = true;
         // 
         // progressLoading
         // 
-        progressLoading.Anchor = System.Windows.Forms.AnchorStyles.None;
-        progressLoading.Location = new System.Drawing.Point(398, 342);
-        progressLoading.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        progressLoading.Anchor = AnchorStyles.None;
+        progressLoading.Location = new Point(329, 332);
+        progressLoading.Margin = new Padding(3, 2, 3, 2);
         progressLoading.MarqueeAnimationSpeed = 20;
         progressLoading.Name = "progressLoading";
-        progressLoading.Size = new System.Drawing.Size(441, 21);
-        progressLoading.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+        progressLoading.Size = new Size(553, 18);
+        progressLoading.Style = ProgressBarStyle.Marquee;
         progressLoading.TabIndex = 14;
         progressLoading.Value = 25;
         progressLoading.Visible = false;
         // 
         // btnStop
         // 
-        btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnStop.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnStop.Enabled = false;
-        btnStop.Location = new System.Drawing.Point(915, 719);
-        btnStop.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        btnStop.Location = new Point(988, 716);
+        btnStop.Margin = new Padding(3, 2, 3, 2);
         btnStop.Name = "btnStop";
-        btnStop.Size = new System.Drawing.Size(131, 30);
+        btnStop.Size = new Size(115, 38);
         btnStop.TabIndex = 13;
         btnStop.Text = "Stop";
         btnStop.UseVisualStyleBackColor = true;
@@ -216,11 +241,11 @@ partial class FrmMain
         // 
         // btnStart
         // 
-        btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        btnStart.Location = new System.Drawing.Point(1051, 719);
-        btnStart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        btnStart.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        btnStart.Location = new Point(1106, 716);
+        btnStart.Margin = new Padding(3, 2, 3, 2);
         btnStart.Name = "btnStart";
-        btnStart.Size = new System.Drawing.Size(131, 30);
+        btnStart.Size = new Size(115, 38);
         btnStart.TabIndex = 12;
         btnStart.Text = "Start";
         btnStart.UseVisualStyleBackColor = true;
@@ -228,18 +253,18 @@ partial class FrmMain
         // 
         // listProcessing
         // 
-        listProcessing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        listProcessing.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1, columnHeader2, columnHeader9, columnHeader10 });
+        listProcessing.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        listProcessing.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader9, columnHeader10 });
         listProcessing.ContextMenuStrip = ctxProcessing;
         listProcessing.FullRowSelect = true;
         listProcessing.GridLines = true;
-        listProcessing.Location = new System.Drawing.Point(7, 4);
-        listProcessing.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        listProcessing.Location = new Point(6, 3);
+        listProcessing.Margin = new Padding(3, 2, 3, 2);
         listProcessing.Name = "listProcessing";
-        listProcessing.Size = new System.Drawing.Size(1175, 708);
+        listProcessing.Size = new Size(1216, 709);
         listProcessing.TabIndex = 11;
         listProcessing.UseCompatibleStateImageBehavior = false;
-        listProcessing.View = System.Windows.Forms.View.Details;
+        listProcessing.View = View.Details;
         // 
         // columnHeader1
         // 
@@ -267,102 +292,253 @@ partial class FrmMain
         // 
         // ctxProcessing
         // 
-        ctxProcessing.ImageScalingSize = new System.Drawing.Size(20, 20);
-        ctxProcessing.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { openNormalMenuItem, openHeightMenuItem, toolStripMenuItem12, copyFilePathMenuItem, excludeFolderMenuItem });
+        ctxProcessing.ImageScalingSize = new Size(20, 20);
+        ctxProcessing.Items.AddRange(new ToolStripItem[] { openNormalMenuItem, openHeightMenuItem, toolStripMenuItem12, excludeFolderMenuItem, excludeFilesMenuItem, toolStripMenuItem16, copyFilePathMenuItem });
         ctxProcessing.Name = "ctxProcessing";
-        ctxProcessing.Size = new System.Drawing.Size(203, 98);
+        ctxProcessing.Size = new Size(203, 126);
         ctxProcessing.Text = "Copy File Path";
         ctxProcessing.Opened += ctxProcessing_Opened;
         // 
         // openNormalMenuItem
         // 
         openNormalMenuItem.Name = "openNormalMenuItem";
-        openNormalMenuItem.Size = new System.Drawing.Size(202, 22);
+        openNormalMenuItem.Size = new Size(202, 22);
         openNormalMenuItem.Text = "Open Normal Map";
         openNormalMenuItem.Click += openFileToolStripMenuItem_Click;
         // 
         // openHeightMenuItem
         // 
         openHeightMenuItem.Name = "openHeightMenuItem";
-        openHeightMenuItem.Size = new System.Drawing.Size(202, 22);
+        openHeightMenuItem.Size = new Size(202, 22);
         openHeightMenuItem.Text = "Open Destination Folder";
         openHeightMenuItem.Click += openDestinationFolderToolStripMenuItem_Click;
         // 
         // toolStripMenuItem12
         // 
         toolStripMenuItem12.Name = "toolStripMenuItem12";
-        toolStripMenuItem12.Size = new System.Drawing.Size(199, 6);
+        toolStripMenuItem12.Size = new Size(199, 6);
+        // 
+        // excludeFolderMenuItem
+        // 
+        excludeFolderMenuItem.Name = "excludeFolderMenuItem";
+        excludeFolderMenuItem.Size = new Size(202, 22);
+        excludeFolderMenuItem.Text = "Exclude Folder(s)";
+        excludeFolderMenuItem.Click += excludeFolderToolStripMenuItem_Click;
+        // 
+        // excludeFilesMenuItem
+        // 
+        excludeFilesMenuItem.Name = "excludeFilesMenuItem";
+        excludeFilesMenuItem.Size = new Size(202, 22);
+        excludeFilesMenuItem.Text = "Exclude File(s)";
+        excludeFilesMenuItem.Click += excludeFilesMenuItem_Click;
+        // 
+        // toolStripMenuItem16
+        // 
+        toolStripMenuItem16.Name = "toolStripMenuItem16";
+        toolStripMenuItem16.Size = new Size(199, 6);
         // 
         // copyFilePathMenuItem
         // 
-        copyFilePathMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { filePathToolStripMenuItem, statusToolStripMenuItem, hashToolStripMenuItem, lineToolStripMenuItem });
+        copyFilePathMenuItem.DropDownItems.AddRange(new ToolStripItem[] { filePathToolStripMenuItem, statusToolStripMenuItem, hashToolStripMenuItem, lineToolStripMenuItem });
         copyFilePathMenuItem.Name = "copyFilePathMenuItem";
-        copyFilePathMenuItem.Size = new System.Drawing.Size(202, 22);
+        copyFilePathMenuItem.Size = new Size(202, 22);
         copyFilePathMenuItem.Text = "Copy";
         // 
         // filePathToolStripMenuItem
         // 
         filePathToolStripMenuItem.Name = "filePathToolStripMenuItem";
-        filePathToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+        filePathToolStripMenuItem.Size = new Size(119, 22);
         filePathToolStripMenuItem.Text = "File Path";
         filePathToolStripMenuItem.Click += filePathToolStripMenuItem_Click;
         // 
         // statusToolStripMenuItem
         // 
         statusToolStripMenuItem.Name = "statusToolStripMenuItem";
-        statusToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+        statusToolStripMenuItem.Size = new Size(119, 22);
         statusToolStripMenuItem.Text = "Status";
         statusToolStripMenuItem.Click += statusToolStripMenuItem_Click;
         // 
         // hashToolStripMenuItem
         // 
         hashToolStripMenuItem.Name = "hashToolStripMenuItem";
-        hashToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+        hashToolStripMenuItem.Size = new Size(119, 22);
         hashToolStripMenuItem.Text = "Hash";
         hashToolStripMenuItem.Click += hashToolStripMenuItem_Click;
         // 
         // lineToolStripMenuItem
         // 
         lineToolStripMenuItem.Name = "lineToolStripMenuItem";
-        lineToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+        lineToolStripMenuItem.Size = new Size(119, 22);
         lineToolStripMenuItem.Text = "Line";
         lineToolStripMenuItem.Click += lineToolStripMenuItem_Click;
         // 
-        // excludeFolderMenuItem
-        // 
-        excludeFolderMenuItem.Name = "excludeFolderMenuItem";
-        excludeFolderMenuItem.Size = new System.Drawing.Size(202, 22);
-        excludeFolderMenuItem.Text = "Exclude Folder(s)";
-        excludeFolderMenuItem.Click += excludeFolderToolStripMenuItem_Click;
-        // 
         // tabSettings
         // 
+        tabSettings.Controls.Add(checkReprocessFailed);
+        tabSettings.Controls.Add(groupBox2);
         tabSettings.Controls.Add(groupBox1);
         tabSettings.Controls.Add(btnClearCache);
         tabSettings.Controls.Add(btnReset);
-        tabSettings.Controls.Add(btnSaveSettings);
-        tabSettings.Controls.Add(txtHeightIntensity);
-        tabSettings.Controls.Add(trackHeightIntensity);
-        tabSettings.Controls.Add(label2);
         tabSettings.Controls.Add(numThreadsCount);
         tabSettings.Controls.Add(label1);
         tabSettings.Controls.Add(txtGameLocation);
-        tabSettings.Location = new System.Drawing.Point(4, 24);
-        tabSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        tabSettings.Location = new Point(4, 24);
+        tabSettings.Margin = new Padding(3, 2, 3, 2);
         tabSettings.Name = "tabSettings";
-        tabSettings.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        tabSettings.Size = new System.Drawing.Size(1189, 755);
+        tabSettings.Padding = new Padding(3, 2, 3, 2);
+        tabSettings.Size = new Size(1226, 755);
         tabSettings.TabIndex = 1;
         tabSettings.Text = "Settings";
         tabSettings.UseVisualStyleBackColor = true;
+        // 
+        // checkReprocessFailed
+        // 
+        checkReprocessFailed.AutoSize = true;
+        checkReprocessFailed.Location = new Point(164, 39);
+        checkReprocessFailed.Margin = new Padding(3, 2, 3, 2);
+        checkReprocessFailed.Name = "checkReprocessFailed";
+        checkReprocessFailed.Size = new Size(135, 19);
+        checkReprocessFailed.TabIndex = 31;
+        checkReprocessFailed.Text = "Reprocess failed files";
+        checkReprocessFailed.UseVisualStyleBackColor = true;
+        // 
+        // groupBox2
+        // 
+        groupBox2.Controls.Add(trackHeightIntensity);
+        groupBox2.Controls.Add(trackHeightSteps);
+        groupBox2.Controls.Add(label2);
+        groupBox2.Controls.Add(txtHeightSteps);
+        groupBox2.Controls.Add(txtHeightIntensity);
+        groupBox2.Controls.Add(label4);
+        groupBox2.Controls.Add(label3);
+        groupBox2.Controls.Add(trackHeightNumPasses);
+        groupBox2.Controls.Add(txtHeightPasses);
+        groupBox2.Location = new Point(7, 65);
+        groupBox2.Margin = new Padding(3, 2, 3, 2);
+        groupBox2.Name = "groupBox2";
+        groupBox2.Padding = new Padding(3, 2, 3, 2);
+        groupBox2.Size = new Size(497, 143);
+        groupBox2.TabIndex = 30;
+        groupBox2.TabStop = false;
+        groupBox2.Text = "Parallax Settings";
+        // 
+        // trackHeightIntensity
+        // 
+        trackHeightIntensity.AutoSize = false;
+        trackHeightIntensity.Location = new Point(238, 38);
+        trackHeightIntensity.Margin = new Padding(3, 2, 3, 2);
+        trackHeightIntensity.Maximum = 50;
+        trackHeightIntensity.Minimum = -50;
+        trackHeightIntensity.Name = "trackHeightIntensity";
+        trackHeightIntensity.Size = new Size(190, 17);
+        trackHeightIntensity.TabIndex = 16;
+        toolTipHeightNumPasses.SetToolTip(trackHeightIntensity, "Final intensity (contrast balance) of the height map (recommended -20)");
+        trackHeightIntensity.Value = -20;
+        trackHeightIntensity.ValueChanged += trackHeightIntensity_ValueChanged;
+        // 
+        // trackHeightSteps
+        // 
+        trackHeightSteps.AutoSize = false;
+        trackHeightSteps.Location = new Point(238, 94);
+        trackHeightSteps.Margin = new Padding(3, 2, 3, 2);
+        trackHeightSteps.Maximum = 75;
+        trackHeightSteps.Minimum = 1;
+        trackHeightSteps.Name = "trackHeightSteps";
+        trackHeightSteps.Size = new Size(190, 17);
+        trackHeightSteps.TabIndex = 29;
+        toolTipHeightNumPasses.SetToolTip(trackHeightSteps, "Maximum displacement between two adjacent pixels (recommended 1)");
+        trackHeightSteps.Value = 1;
+        trackHeightSteps.ValueChanged += trackHeightSteps_ValueChanged;
+        // 
+        // label2
+        // 
+        label2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        label2.AutoSize = true;
+        label2.Location = new Point(61, 40);
+        label2.Name = "label2";
+        label2.Size = new Size(121, 15);
+        label2.TabIndex = 15;
+        label2.Text = "Height Map Intensity:";
+        toolTipHeightNumPasses.SetToolTip(label2, "Final intensity (contrast balance) of the height map (recommended -20)");
+        // 
+        // txtHeightSteps
+        // 
+        txtHeightSteps.BorderStyle = BorderStyle.FixedSingle;
+        txtHeightSteps.Location = new Point(188, 94);
+        txtHeightSteps.Margin = new Padding(3, 2, 3, 2);
+        txtHeightSteps.Name = "txtHeightSteps";
+        txtHeightSteps.Size = new Size(45, 23);
+        txtHeightSteps.TabIndex = 28;
+        toolTipHeightNumPasses.SetToolTip(txtHeightSteps, "Maximum displacement between two adjacent pixels (recommended 1)");
+        txtHeightSteps.KeyPress += txtHeightSteps_KeyPress;
+        txtHeightSteps.Leave += txtHeightSteps_Leave;
+        // 
+        // txtHeightIntensity
+        // 
+        txtHeightIntensity.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+        txtHeightIntensity.BorderStyle = BorderStyle.FixedSingle;
+        txtHeightIntensity.Location = new Point(188, 38);
+        txtHeightIntensity.Margin = new Padding(3, 2, 3, 2);
+        txtHeightIntensity.Name = "txtHeightIntensity";
+        txtHeightIntensity.Size = new Size(45, 23);
+        txtHeightIntensity.TabIndex = 17;
+        toolTipHeightNumPasses.SetToolTip(txtHeightIntensity, "Final intensity (contrast balance) of the height map (recommended -20)");
+        txtHeightIntensity.KeyPress += txtHeightIntensity_KeyPress;
+        txtHeightIntensity.Leave += txtHeightIntensity_Leave;
+        // 
+        // label4
+        // 
+        label4.Location = new Point(61, 97);
+        label4.Name = "label4";
+        label4.Size = new Size(103, 17);
+        label4.TabIndex = 27;
+        label4.Text = "Max Step Height:";
+        toolTipHeightNumPasses.SetToolTip(label4, "Maximum displacement between two adjacent pixels (recommended 1)");
+        // 
+        // label3
+        // 
+        label3.Location = new Point(61, 69);
+        label3.Name = "label3";
+        label3.Size = new Size(103, 17);
+        label3.TabIndex = 24;
+        label3.Text = "Height Map Passes:";
+        toolTipHeightNumPasses.SetToolTip(label3, "Number of passes to perform, more passes produces a more accurate result, but takes longer (recommended 128)");
+        // 
+        // trackHeightNumPasses
+        // 
+        trackHeightNumPasses.AutoSize = false;
+        trackHeightNumPasses.Location = new Point(238, 66);
+        trackHeightNumPasses.Margin = new Padding(3, 2, 3, 2);
+        trackHeightNumPasses.Maximum = 4096;
+        trackHeightNumPasses.Minimum = 32;
+        trackHeightNumPasses.Name = "trackHeightNumPasses";
+        trackHeightNumPasses.Size = new Size(190, 17);
+        trackHeightNumPasses.TabIndex = 26;
+        toolTipHeightNumPasses.SetToolTip(trackHeightNumPasses, "Number of passes to perform, more passes produces a more accurate result, but takes longer (recommended 128)");
+        trackHeightNumPasses.Value = 128;
+        trackHeightNumPasses.ValueChanged += trackHeightNumPasses_ValueChanged;
+        // 
+        // txtHeightPasses
+        // 
+        txtHeightPasses.BorderStyle = BorderStyle.FixedSingle;
+        txtHeightPasses.Location = new Point(188, 66);
+        txtHeightPasses.Margin = new Padding(3, 2, 3, 2);
+        txtHeightPasses.Name = "txtHeightPasses";
+        txtHeightPasses.Size = new Size(45, 23);
+        txtHeightPasses.TabIndex = 25;
+        toolTipHeightNumPasses.SetToolTip(txtHeightPasses, "Number of passes to perform, more passes produces a more accurate result, but takes longer (recommended 128)");
+        txtHeightPasses.KeyPress += txtHeightPasses_KeyPress;
+        txtHeightPasses.Leave += txtHeightPasses_Leave;
         // 
         // groupBox1
         // 
         groupBox1.Controls.Add(radioSyncOutputFolder);
         groupBox1.Controls.Add(radioRemoveOutputFolder);
-        groupBox1.Location = new System.Drawing.Point(8, 82);
+        groupBox1.Location = new Point(7, 213);
+        groupBox1.Margin = new Padding(3, 2, 3, 2);
         groupBox1.Name = "groupBox1";
-        groupBox1.Size = new System.Drawing.Size(568, 133);
+        groupBox1.Padding = new Padding(3, 2, 3, 2);
+        groupBox1.Size = new Size(497, 100);
         groupBox1.TabIndex = 23;
         groupBox1.TabStop = false;
         groupBox1.Text = "Output";
@@ -370,9 +546,10 @@ partial class FrmMain
         // radioSyncOutputFolder
         // 
         radioSyncOutputFolder.Checked = true;
-        radioSyncOutputFolder.Location = new System.Drawing.Point(38, 70);
+        radioSyncOutputFolder.Location = new Point(61, 54);
+        radioSyncOutputFolder.Margin = new Padding(3, 2, 3, 2);
         radioSyncOutputFolder.Name = "radioSyncOutputFolder";
-        radioSyncOutputFolder.Size = new System.Drawing.Size(212, 24);
+        radioSyncOutputFolder.Size = new Size(186, 18);
         radioSyncOutputFolder.TabIndex = 1;
         radioSyncOutputFolder.TabStop = true;
         radioSyncOutputFolder.Text = "Keep output folder in sync";
@@ -380,19 +557,21 @@ partial class FrmMain
         // 
         // radioRemoveOutputFolder
         // 
-        radioRemoveOutputFolder.Location = new System.Drawing.Point(38, 40);
+        radioRemoveOutputFolder.Location = new Point(61, 32);
+        radioRemoveOutputFolder.Margin = new Padding(3, 2, 3, 2);
         radioRemoveOutputFolder.Name = "radioRemoveOutputFolder";
-        radioRemoveOutputFolder.Size = new System.Drawing.Size(230, 24);
+        radioRemoveOutputFolder.Size = new Size(201, 18);
         radioRemoveOutputFolder.TabIndex = 0;
         radioRemoveOutputFolder.Text = "Remove output folder when finished";
         radioRemoveOutputFolder.UseVisualStyleBackColor = true;
         // 
         // btnClearCache
         // 
-        btnClearCache.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        btnClearCache.Location = new System.Drawing.Point(778, 722);
+        btnClearCache.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        btnClearCache.Location = new Point(988, 717);
+        btnClearCache.Margin = new Padding(3, 2, 3, 2);
         btnClearCache.Name = "btnClearCache";
-        btnClearCache.Size = new System.Drawing.Size(131, 30);
+        btnClearCache.Size = new Size(115, 38);
         btnClearCache.TabIndex = 22;
         btnClearCache.Text = "Clear Cache";
         btnClearCache.UseVisualStyleBackColor = true;
@@ -400,174 +579,142 @@ partial class FrmMain
         // 
         // btnReset
         // 
-        btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        btnReset.Location = new System.Drawing.Point(915, 722);
-        btnReset.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        btnReset.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        btnReset.Location = new Point(1109, 717);
+        btnReset.Margin = new Padding(3, 2, 3, 2);
         btnReset.Name = "btnReset";
-        btnReset.Size = new System.Drawing.Size(131, 30);
+        btnReset.Size = new Size(115, 38);
         btnReset.TabIndex = 19;
         btnReset.Text = "Reset Values";
         btnReset.UseVisualStyleBackColor = true;
         btnReset.Click += btnReset_Click;
         // 
-        // btnSaveSettings
-        // 
-        btnSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        btnSaveSettings.Location = new System.Drawing.Point(1051, 722);
-        btnSaveSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        btnSaveSettings.Name = "btnSaveSettings";
-        btnSaveSettings.Size = new System.Drawing.Size(131, 30);
-        btnSaveSettings.TabIndex = 18;
-        btnSaveSettings.Text = "Save";
-        btnSaveSettings.UseVisualStyleBackColor = true;
-        btnSaveSettings.Click += btnSaveSettings_Click;
-        // 
-        // txtHeightIntensity
-        // 
-        txtHeightIntensity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left));
-        txtHeightIntensity.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        txtHeightIntensity.Location = new System.Drawing.Point(302, 49);
-        txtHeightIntensity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        txtHeightIntensity.Name = "txtHeightIntensity";
-        txtHeightIntensity.Size = new System.Drawing.Size(51, 23);
-        txtHeightIntensity.TabIndex = 17;
-        txtHeightIntensity.KeyPress += txtHeightIntensity_KeyPress;
-        // 
-        // trackHeightIntensity
-        // 
-        trackHeightIntensity.AutoSize = false;
-        trackHeightIntensity.Location = new System.Drawing.Point(359, 49);
-        trackHeightIntensity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        trackHeightIntensity.Maximum = -50;
-        trackHeightIntensity.Minimum = -100;
-        trackHeightIntensity.Name = "trackHeightIntensity";
-        trackHeightIntensity.Size = new System.Drawing.Size(217, 28);
-        trackHeightIntensity.TabIndex = 16;
-        trackHeightIntensity.Value = -88;
-        trackHeightIntensity.ValueChanged += trackHeightIntensity_ValueChanged;
-        // 
-        // label2
-        // 
-        label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        label2.AutoSize = true;
-        label2.Location = new System.Drawing.Point(175, 51);
-        label2.Name = "label2";
-        label2.Size = new System.Drawing.Size(121, 15);
-        label2.TabIndex = 15;
-        label2.Text = "Height Map Intensity:";
-        // 
         // numThreadsCount
         // 
-        numThreadsCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        numThreadsCount.Location = new System.Drawing.Point(91, 49);
-        numThreadsCount.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        numThreadsCount.BorderStyle = BorderStyle.FixedSingle;
+        numThreadsCount.Location = new Point(90, 37);
+        numThreadsCount.Margin = new Padding(3, 2, 3, 2);
+        numThreadsCount.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         numThreadsCount.Name = "numThreadsCount";
-        numThreadsCount.Size = new System.Drawing.Size(66, 23);
+        numThreadsCount.Size = new Size(58, 23);
         numThreadsCount.TabIndex = 14;
-        numThreadsCount.Value = new decimal(new int[] { 10, 0, 0, 0 });
+        toolTipHeightNumPasses.SetToolTip(numThreadsCount, "Threads to run in parallel (no more than 10 recommended)");
+        numThreadsCount.Value = new decimal(new int[] { 5, 0, 0, 0 });
         numThreadsCount.KeyPress += numThreadsCount_KeyPress;
         // 
         // label1
         // 
-        label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        label1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         label1.AutoSize = true;
-        label1.Location = new System.Drawing.Point(8, 53);
+        label1.Location = new Point(7, 40);
         label1.Name = "label1";
-        label1.Size = new System.Drawing.Size(77, 15);
+        label1.Size = new Size(77, 15);
         label1.TabIndex = 13;
         label1.Text = "Max Threads:";
         // 
         // txtGameLocation
         // 
-        txtGameLocation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        txtGameLocation.Location = new System.Drawing.Point(8, 13);
-        txtGameLocation.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        txtGameLocation.BorderStyle = BorderStyle.FixedSingle;
+        txtGameLocation.Location = new Point(7, 10);
+        txtGameLocation.Margin = new Padding(3, 2, 3, 2);
         txtGameLocation.Name = "txtGameLocation";
-        txtGameLocation.Size = new System.Drawing.Size(568, 23);
+        txtGameLocation.Size = new Size(497, 23);
         txtGameLocation.TabIndex = 12;
         txtGameLocation.Text = "Game data location...";
         txtGameLocation.Click += txtGameLocation_Click;
         txtGameLocation.KeyPress += txtGameLocation_KeyPress;
         // 
-        // pageFolderExclusions
+        // pageExclusions
         // 
-        pageFolderExclusions.Controls.Add(txtExcludedFolder);
-        pageFolderExclusions.Controls.Add(listExcludedFolders);
-        pageFolderExclusions.Location = new System.Drawing.Point(4, 24);
-        pageFolderExclusions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        pageFolderExclusions.Name = "pageFolderExclusions";
-        pageFolderExclusions.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        pageFolderExclusions.Size = new System.Drawing.Size(1189, 755);
-        pageFolderExclusions.TabIndex = 3;
-        pageFolderExclusions.Text = "Folder Exclusions";
-        pageFolderExclusions.UseVisualStyleBackColor = true;
+        pageExclusions.Controls.Add(txtExcludedFolder);
+        pageExclusions.Controls.Add(listExclusions);
+        pageExclusions.Location = new Point(4, 24);
+        pageExclusions.Margin = new Padding(3, 2, 3, 2);
+        pageExclusions.Name = "pageExclusions";
+        pageExclusions.Padding = new Padding(3, 2, 3, 2);
+        pageExclusions.Size = new Size(1226, 755);
+        pageExclusions.TabIndex = 3;
+        pageExclusions.Text = "Exclusions";
+        pageExclusions.UseVisualStyleBackColor = true;
         // 
         // txtExcludedFolder
         // 
-        txtExcludedFolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        txtExcludedFolder.Dock = System.Windows.Forms.DockStyle.Top;
-        txtExcludedFolder.Location = new System.Drawing.Point(3, 2);
-        txtExcludedFolder.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        txtExcludedFolder.BorderStyle = BorderStyle.FixedSingle;
+        txtExcludedFolder.Dock = DockStyle.Top;
+        txtExcludedFolder.Location = new Point(3, 2);
+        txtExcludedFolder.Margin = new Padding(3, 2, 3, 2);
         txtExcludedFolder.Name = "txtExcludedFolder";
-        txtExcludedFolder.Size = new System.Drawing.Size(1183, 23);
+        txtExcludedFolder.Size = new Size(1220, 23);
         txtExcludedFolder.TabIndex = 30;
         txtExcludedFolder.KeyPress += txtExcludedFolder_KeyPress;
         // 
-        // listExcludedFolders
+        // listExclusions
         // 
-        listExcludedFolders.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        listExcludedFolders.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader8 });
-        listExcludedFolders.ContextMenuStrip = ctxExcludedFolders;
-        listExcludedFolders.Dock = System.Windows.Forms.DockStyle.Bottom;
-        listExcludedFolders.FullRowSelect = true;
-        listExcludedFolders.GridLines = true;
-        listExcludedFolders.Location = new System.Drawing.Point(3, 29);
-        listExcludedFolders.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        listExcludedFolders.Name = "listExcludedFolders";
-        listExcludedFolders.Scrollable = false;
-        listExcludedFolders.Size = new System.Drawing.Size(1183, 724);
-        listExcludedFolders.TabIndex = 29;
-        listExcludedFolders.UseCompatibleStateImageBehavior = false;
-        listExcludedFolders.View = System.Windows.Forms.View.Details;
+        listExclusions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        listExclusions.BorderStyle = BorderStyle.FixedSingle;
+        listExclusions.Columns.AddRange(new ColumnHeader[] { columnHeader8 });
+        listExclusions.ContextMenuStrip = ctxExclusions;
+        listExclusions.FullRowSelect = true;
+        listExclusions.GridLines = true;
+        listExclusions.Location = new Point(3, 29);
+        listExclusions.Margin = new Padding(3, 2, 3, 2);
+        listExclusions.Name = "listExclusions";
+        listExclusions.Scrollable = false;
+        listExclusions.Size = new Size(1222, 730);
+        listExclusions.TabIndex = 29;
+        listExclusions.UseCompatibleStateImageBehavior = false;
+        listExclusions.View = View.Details;
         // 
         // columnHeader8
         // 
         columnHeader8.Name = "columnHeader8";
-        columnHeader8.Text = "Folders";
+        columnHeader8.Text = "Exclusions";
         columnHeader8.Width = 900;
         // 
-        // ctxExcludedFolders
+        // ctxExclusions
         // 
-        ctxExcludedFolders.ImageScalingSize = new System.Drawing.Size(20, 20);
-        ctxExcludedFolders.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { deleteToolStripMenuItem });
-        ctxExcludedFolders.Name = "ctxExcludedFolders";
-        ctxExcludedFolders.Size = new System.Drawing.Size(108, 26);
-        ctxExcludedFolders.Opening += ctxExcludedFolders_Opening;
+        ctxExclusions.ImageScalingSize = new Size(20, 20);
+        ctxExclusions.Items.AddRange(new ToolStripItem[] { copyToolStripMenuItem, toolStripMenuItem19, deleteToolStripMenuItem });
+        ctxExclusions.Name = "ctxExcludedFolders";
+        ctxExclusions.Size = new Size(108, 54);
+        ctxExclusions.Opening += ctxExcludedFolders_Opening;
+        // 
+        // copyToolStripMenuItem
+        // 
+        copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+        copyToolStripMenuItem.Size = new Size(107, 22);
+        copyToolStripMenuItem.Text = "Copy";
+        copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+        // 
+        // toolStripMenuItem19
+        // 
+        toolStripMenuItem19.Name = "toolStripMenuItem19";
+        toolStripMenuItem19.Size = new Size(104, 6);
         // 
         // deleteToolStripMenuItem
         // 
         deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-        deleteToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+        deleteToolStripMenuItem.Size = new Size(107, 22);
         deleteToolStripMenuItem.Text = "Delete";
         deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
         // 
         // pageModExclusions
         // 
         pageModExclusions.Controls.Add(splitContainer1);
-        pageModExclusions.Location = new System.Drawing.Point(4, 24);
-        pageModExclusions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        pageModExclusions.Location = new Point(4, 24);
+        pageModExclusions.Margin = new Padding(3, 2, 3, 2);
         pageModExclusions.Name = "pageModExclusions";
-        pageModExclusions.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-        pageModExclusions.Size = new System.Drawing.Size(1189, 755);
+        pageModExclusions.Padding = new Padding(3, 2, 3, 2);
+        pageModExclusions.Size = new Size(1226, 755);
         pageModExclusions.TabIndex = 2;
         pageModExclusions.Text = "Mod Exclusions";
         pageModExclusions.UseVisualStyleBackColor = true;
         // 
         // splitContainer1
         // 
-        splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-        splitContainer1.Location = new System.Drawing.Point(3, 2);
-        splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        splitContainer1.Dock = DockStyle.Fill;
+        splitContainer1.Location = new Point(3, 2);
+        splitContainer1.Margin = new Padding(3, 2, 3, 2);
         splitContainer1.Name = "splitContainer1";
         // 
         // splitContainer1.Panel1
@@ -578,26 +725,26 @@ partial class FrmMain
         // splitContainer1.Panel2
         // 
         splitContainer1.Panel2.Controls.Add(splitContainer2);
-        splitContainer1.Size = new System.Drawing.Size(1183, 751);
-        splitContainer1.SplitterDistance = 656;
+        splitContainer1.Size = new Size(1220, 751);
+        splitContainer1.SplitterDistance = 675;
         splitContainer1.TabIndex = 29;
         // 
         // lstModList
         // 
-        lstModList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        lstModList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader5, columnHeader3, columnHeader4 });
+        lstModList.BorderStyle = BorderStyle.FixedSingle;
+        lstModList.Columns.AddRange(new ColumnHeader[] { columnHeader5, columnHeader3, columnHeader4 });
         lstModList.ContextMenuStrip = ctxModList;
-        lstModList.Dock = System.Windows.Forms.DockStyle.Fill;
+        lstModList.Dock = DockStyle.Fill;
         lstModList.FullRowSelect = true;
         lstModList.GridLines = true;
-        lstModList.Location = new System.Drawing.Point(0, 23);
-        lstModList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        lstModList.Location = new Point(0, 23);
+        lstModList.Margin = new Padding(3, 2, 3, 2);
         lstModList.Name = "lstModList";
         lstModList.Scrollable = false;
-        lstModList.Size = new System.Drawing.Size(656, 728);
+        lstModList.Size = new Size(675, 728);
         lstModList.TabIndex = 24;
         lstModList.UseCompatibleStateImageBehavior = false;
-        lstModList.View = System.Windows.Forms.View.Details;
+        lstModList.View = View.Details;
         // 
         // columnHeader5
         // 
@@ -617,48 +764,48 @@ partial class FrmMain
         // 
         // ctxModList
         // 
-        ctxModList.ImageScalingSize = new System.Drawing.Size(20, 20);
-        ctxModList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { excludeToolStripMenuItem, includeToolStripMenuItem, toolStripMenuItem1, excludeToolStripMenuItem1, includeToolStripMenuItem1 });
+        ctxModList.ImageScalingSize = new Size(20, 20);
+        ctxModList.Items.AddRange(new ToolStripItem[] { excludeToolStripMenuItem, includeToolStripMenuItem, toolStripMenuItem1, excludeToolStripMenuItem1, includeToolStripMenuItem1 });
         ctxModList.Name = "ctxModList";
-        ctxModList.Size = new System.Drawing.Size(138, 98);
+        ctxModList.Size = new Size(138, 98);
         // 
         // excludeToolStripMenuItem
         // 
         excludeToolStripMenuItem.Name = "excludeToolStripMenuItem";
-        excludeToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+        excludeToolStripMenuItem.Size = new Size(137, 22);
         excludeToolStripMenuItem.Text = "Select All";
         // 
         // includeToolStripMenuItem
         // 
         includeToolStripMenuItem.Name = "includeToolStripMenuItem";
-        includeToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+        includeToolStripMenuItem.Size = new Size(137, 22);
         includeToolStripMenuItem.Text = "Select None";
         // 
         // toolStripMenuItem1
         // 
         toolStripMenuItem1.Name = "toolStripMenuItem1";
-        toolStripMenuItem1.Size = new System.Drawing.Size(134, 6);
+        toolStripMenuItem1.Size = new Size(134, 6);
         // 
         // excludeToolStripMenuItem1
         // 
         excludeToolStripMenuItem1.Name = "excludeToolStripMenuItem1";
-        excludeToolStripMenuItem1.Size = new System.Drawing.Size(137, 22);
+        excludeToolStripMenuItem1.Size = new Size(137, 22);
         excludeToolStripMenuItem1.Text = "Exclude";
         // 
         // includeToolStripMenuItem1
         // 
         includeToolStripMenuItem1.Name = "includeToolStripMenuItem1";
-        includeToolStripMenuItem1.Size = new System.Drawing.Size(137, 22);
+        includeToolStripMenuItem1.Size = new Size(137, 22);
         includeToolStripMenuItem1.Text = "Include";
         // 
         // txtModsLocation
         // 
-        txtModsLocation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        txtModsLocation.Dock = System.Windows.Forms.DockStyle.Top;
-        txtModsLocation.Location = new System.Drawing.Point(0, 0);
-        txtModsLocation.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        txtModsLocation.BorderStyle = BorderStyle.FixedSingle;
+        txtModsLocation.Dock = DockStyle.Top;
+        txtModsLocation.Location = new Point(0, 0);
+        txtModsLocation.Margin = new Padding(3, 2, 3, 2);
         txtModsLocation.Name = "txtModsLocation";
-        txtModsLocation.Size = new System.Drawing.Size(656, 23);
+        txtModsLocation.Size = new Size(675, 23);
         txtModsLocation.TabIndex = 23;
         txtModsLocation.Text = "Mods location...";
         txtModsLocation.Click += txtModsLocation_Click;
@@ -666,11 +813,11 @@ partial class FrmMain
         // 
         // splitContainer2
         // 
-        splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-        splitContainer2.Location = new System.Drawing.Point(0, 0);
-        splitContainer2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        splitContainer2.Dock = DockStyle.Fill;
+        splitContainer2.Location = new Point(0, 0);
+        splitContainer2.Margin = new Padding(3, 2, 3, 2);
         splitContainer2.Name = "splitContainer2";
-        splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+        splitContainer2.Orientation = Orientation.Horizontal;
         // 
         // splitContainer2.Panel1
         // 
@@ -679,27 +826,27 @@ partial class FrmMain
         // splitContainer2.Panel2
         // 
         splitContainer2.Panel2.Controls.Add(listView2);
-        splitContainer2.Size = new System.Drawing.Size(523, 751);
-        splitContainer2.SplitterDistance = 341;
-        splitContainer2.SplitterWidth = 3;
+        splitContainer2.Size = new Size(541, 751);
+        splitContainer2.SplitterDistance = 339;
+        splitContainer2.SplitterWidth = 2;
         splitContainer2.TabIndex = 0;
         // 
         // listView1
         // 
-        listView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader6 });
+        listView1.BorderStyle = BorderStyle.FixedSingle;
+        listView1.Columns.AddRange(new ColumnHeader[] { columnHeader6 });
         listView1.ContextMenuStrip = ctxExcludedMods;
-        listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+        listView1.Dock = DockStyle.Fill;
         listView1.FullRowSelect = true;
         listView1.GridLines = true;
-        listView1.Location = new System.Drawing.Point(0, 0);
-        listView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        listView1.Location = new Point(0, 0);
+        listView1.Margin = new Padding(3, 2, 3, 2);
         listView1.Name = "listView1";
         listView1.Scrollable = false;
-        listView1.Size = new System.Drawing.Size(523, 341);
+        listView1.Size = new Size(541, 339);
         listView1.TabIndex = 28;
         listView1.UseCompatibleStateImageBehavior = false;
-        listView1.View = System.Windows.Forms.View.Details;
+        listView1.View = View.Details;
         // 
         // columnHeader6
         // 
@@ -709,50 +856,50 @@ partial class FrmMain
         // 
         // ctxExcludedMods
         // 
-        ctxExcludedMods.ImageScalingSize = new System.Drawing.Size(20, 20);
-        ctxExcludedMods.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem2, toolStripMenuItem3, toolStripSeparator1, toolStripMenuItem4 });
+        ctxExcludedMods.ImageScalingSize = new Size(20, 20);
+        ctxExcludedMods.Items.AddRange(new ToolStripItem[] { toolStripMenuItem2, toolStripMenuItem3, toolStripSeparator1, toolStripMenuItem4 });
         ctxExcludedMods.Name = "ctxModList";
-        ctxExcludedMods.Size = new System.Drawing.Size(138, 76);
+        ctxExcludedMods.Size = new Size(138, 76);
         // 
         // toolStripMenuItem2
         // 
         toolStripMenuItem2.Name = "toolStripMenuItem2";
-        toolStripMenuItem2.Size = new System.Drawing.Size(137, 22);
+        toolStripMenuItem2.Size = new Size(137, 22);
         toolStripMenuItem2.Text = "Select All";
         // 
         // toolStripMenuItem3
         // 
         toolStripMenuItem3.Name = "toolStripMenuItem3";
-        toolStripMenuItem3.Size = new System.Drawing.Size(137, 22);
+        toolStripMenuItem3.Size = new Size(137, 22);
         toolStripMenuItem3.Text = "Select None";
         // 
         // toolStripSeparator1
         // 
         toolStripSeparator1.Name = "toolStripSeparator1";
-        toolStripSeparator1.Size = new System.Drawing.Size(134, 6);
+        toolStripSeparator1.Size = new Size(134, 6);
         // 
         // toolStripMenuItem4
         // 
         toolStripMenuItem4.Name = "toolStripMenuItem4";
-        toolStripMenuItem4.Size = new System.Drawing.Size(137, 22);
+        toolStripMenuItem4.Size = new Size(137, 22);
         toolStripMenuItem4.Text = "Remove";
         // 
         // listView2
         // 
-        listView2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader7 });
+        listView2.BorderStyle = BorderStyle.FixedSingle;
+        listView2.Columns.AddRange(new ColumnHeader[] { columnHeader7 });
         listView2.ContextMenuStrip = ctxIncludedMods;
-        listView2.Dock = System.Windows.Forms.DockStyle.Fill;
+        listView2.Dock = DockStyle.Fill;
         listView2.FullRowSelect = true;
         listView2.GridLines = true;
-        listView2.Location = new System.Drawing.Point(0, 0);
-        listView2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+        listView2.Location = new Point(0, 0);
+        listView2.Margin = new Padding(3, 2, 3, 2);
         listView2.Name = "listView2";
         listView2.Scrollable = false;
-        listView2.Size = new System.Drawing.Size(523, 407);
+        listView2.Size = new Size(541, 410);
         listView2.TabIndex = 29;
         listView2.UseCompatibleStateImageBehavior = false;
-        listView2.View = System.Windows.Forms.View.Details;
+        listView2.View = View.Details;
         // 
         // columnHeader7
         // 
@@ -762,86 +909,106 @@ partial class FrmMain
         // 
         // ctxIncludedMods
         // 
-        ctxIncludedMods.ImageScalingSize = new System.Drawing.Size(20, 20);
-        ctxIncludedMods.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItem5, toolStripMenuItem6, toolStripSeparator2, toolStripMenuItem7 });
+        ctxIncludedMods.ImageScalingSize = new Size(20, 20);
+        ctxIncludedMods.Items.AddRange(new ToolStripItem[] { toolStripMenuItem5, toolStripMenuItem6, toolStripSeparator2, toolStripMenuItem7 });
         ctxIncludedMods.Name = "ctxModList";
-        ctxIncludedMods.Size = new System.Drawing.Size(138, 76);
+        ctxIncludedMods.Size = new Size(138, 76);
         // 
         // toolStripMenuItem5
         // 
         toolStripMenuItem5.Name = "toolStripMenuItem5";
-        toolStripMenuItem5.Size = new System.Drawing.Size(137, 22);
+        toolStripMenuItem5.Size = new Size(137, 22);
         toolStripMenuItem5.Text = "Select All";
         // 
         // toolStripMenuItem6
         // 
         toolStripMenuItem6.Name = "toolStripMenuItem6";
-        toolStripMenuItem6.Size = new System.Drawing.Size(137, 22);
+        toolStripMenuItem6.Size = new Size(137, 22);
         toolStripMenuItem6.Text = "Select None";
         // 
         // toolStripSeparator2
         // 
         toolStripSeparator2.Name = "toolStripSeparator2";
-        toolStripSeparator2.Size = new System.Drawing.Size(134, 6);
+        toolStripSeparator2.Size = new Size(134, 6);
         // 
         // toolStripMenuItem7
         // 
         toolStripMenuItem7.Name = "toolStripMenuItem7";
-        toolStripMenuItem7.Size = new System.Drawing.Size(137, 22);
+        toolStripMenuItem7.Size = new Size(137, 22);
         toolStripMenuItem7.Text = "Remove";
         // 
         // toolStripMenuItem8
         // 
         toolStripMenuItem8.Name = "toolStripMenuItem8";
-        toolStripMenuItem8.Size = new System.Drawing.Size(32, 19);
+        toolStripMenuItem8.Size = new Size(32, 19);
         // 
         // toolStripMenuItem9
         // 
         toolStripMenuItem9.Name = "toolStripMenuItem9";
-        toolStripMenuItem9.Size = new System.Drawing.Size(32, 19);
+        toolStripMenuItem9.Size = new Size(32, 19);
         // 
         // toolStripMenuItem10
         // 
         toolStripMenuItem10.Name = "toolStripMenuItem10";
-        toolStripMenuItem10.Size = new System.Drawing.Size(32, 19);
+        toolStripMenuItem10.Size = new Size(32, 19);
         // 
         // toolStripMenuItem11
         // 
         toolStripMenuItem11.Name = "toolStripMenuItem11";
-        toolStripMenuItem11.Size = new System.Drawing.Size(32, 19);
+        toolStripMenuItem11.Size = new Size(32, 19);
         // 
         // toolStripMenuItem13
         // 
         toolStripMenuItem13.Name = "toolStripMenuItem13";
-        toolStripMenuItem13.Size = new System.Drawing.Size(32, 19);
+        toolStripMenuItem13.Size = new Size(32, 19);
         // 
         // toolStripSeparator3
         // 
         toolStripSeparator3.Name = "toolStripSeparator3";
-        toolStripSeparator3.Size = new System.Drawing.Size(6, 6);
+        toolStripSeparator3.Size = new Size(6, 6);
         // 
         // toolStripMenuItem14
         // 
         toolStripMenuItem14.Name = "toolStripMenuItem14";
-        toolStripMenuItem14.Size = new System.Drawing.Size(32, 19);
+        toolStripMenuItem14.Size = new Size(32, 19);
         // 
         // timerProcess
         // 
         timerProcess.Interval = 1000;
         timerProcess.Tick += timerProcess_Tick;
         // 
+        // toolStripMenuItem15
+        // 
+        toolStripMenuItem15.Name = "toolStripMenuItem15";
+        toolStripMenuItem15.Size = new Size(32, 19);
+        // 
+        // toolTipHeightNumPasses
+        // 
+        toolTipHeightNumPasses.ToolTipIcon = ToolTipIcon.Info;
+        toolTipHeightNumPasses.ToolTipTitle = "Info";
+        // 
+        // toolStripMenuItem17
+        // 
+        toolStripMenuItem17.Name = "toolStripMenuItem17";
+        toolStripMenuItem17.Size = new Size(32, 19);
+        // 
+        // toolStripMenuItem18
+        // 
+        toolStripMenuItem18.Name = "toolStripMenuItem18";
+        toolStripMenuItem18.Size = new Size(32, 19);
+        // 
         // FrmMain
         // 
-        AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-        AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(1197, 805);
+        AutoScaleDimensions = new SizeF(7F, 15F);
+        AutoScaleMode = AutoScaleMode.Font;
+        ClientSize = new Size(1234, 805);
         Controls.Add(tabControl1);
         Controls.Add(statusStrip1);
-        Icon = ((System.Drawing.Icon)resources.GetObject("$this.Icon"));
-        Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+        Icon = (Icon)resources.GetObject("$this.Icon");
         MaximizeBox = false;
-        StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-        Text = "SkyMapper v1.0b";
+        Name = "FrmMain";
+        StartPosition = FormStartPosition.CenterScreen;
+        Text = "SkyMapper v1.1";
         FormClosing += FrmMain_FormClosing;
         Load += FrmMain_LoadAsync;
         statusStrip1.ResumeLayout(false);
@@ -851,12 +1018,16 @@ partial class FrmMain
         ctxProcessing.ResumeLayout(false);
         tabSettings.ResumeLayout(false);
         tabSettings.PerformLayout();
-        groupBox1.ResumeLayout(false);
+        groupBox2.ResumeLayout(false);
+        groupBox2.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)trackHeightIntensity).EndInit();
+        ((System.ComponentModel.ISupportInitialize)trackHeightSteps).EndInit();
+        ((System.ComponentModel.ISupportInitialize)trackHeightNumPasses).EndInit();
+        groupBox1.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)numThreadsCount).EndInit();
-        pageFolderExclusions.ResumeLayout(false);
-        pageFolderExclusions.PerformLayout();
-        ctxExcludedFolders.ResumeLayout(false);
+        pageExclusions.ResumeLayout(false);
+        pageExclusions.PerformLayout();
+        ctxExclusions.ResumeLayout(false);
         pageModExclusions.ResumeLayout(false);
         splitContainer1.Panel1.ResumeLayout(false);
         splitContainer1.Panel1.PerformLayout();
@@ -873,6 +1044,25 @@ partial class FrmMain
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem18;
+
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem17;
+
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem15;
+
+    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.TextBox txtHeightPasses;
+
+    private System.Windows.Forms.Label label4;
+
+    private System.Windows.Forms.TrackBar trackHeightNumPasses;
+
+    private System.Windows.Forms.TrackBar trackHeightSteps;
+
+    private System.Windows.Forms.TextBox txtHeightSteps;
+
+    private System.Windows.Forms.Label label3;
 
     private System.Windows.Forms.RadioButton radioRemoveOutputFolder;
     private System.Windows.Forms.RadioButton radioSyncOutputFolder;
@@ -920,16 +1110,16 @@ partial class FrmMain
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.TextBox txtGameLocation;
     private TabPage pageModExclusions;
-    private SplitContainer splitContainer1;
-    private ListView lstModList;
+    private System.Windows.Forms.SplitContainer splitContainer1;
+    private System.Windows.Forms.ListView lstModList;
     private ColumnHeader columnHeader5;
     private ColumnHeader columnHeader3;
     private ColumnHeader columnHeader4;
-    private TextBox txtModsLocation;
-    private SplitContainer splitContainer2;
-    private ListView listView1;
+    private System.Windows.Forms.TextBox txtModsLocation;
+    private System.Windows.Forms.SplitContainer splitContainer2;
+    private System.Windows.Forms.ListView listView1;
     private ColumnHeader columnHeader6;
-    private ListView listView2;
+    private System.Windows.Forms.ListView listView2;
     private ColumnHeader columnHeader7;
     private ContextMenuStrip ctxModList;
     private ToolStripMenuItem excludeToolStripMenuItem;
@@ -950,13 +1140,12 @@ partial class FrmMain
     private System.Windows.Forms.ContextMenuStrip ctxProcessing;
     private System.Windows.Forms.ToolStripMenuItem openNormalMenuItem;
     private System.Windows.Forms.ToolStripMenuItem openHeightMenuItem;
-    private TabPage pageFolderExclusions;
-    private System.Windows.Forms.ListView listExcludedFolders;
-    private ColumnHeader columnHeader8;
+    private TabPage pageExclusions;
+    private System.Windows.Forms.ListView listExclusions;
+    private System.Windows.Forms.ColumnHeader columnHeader8;
     private System.Windows.Forms.TextBox txtExcludedFolder;
-    private ContextMenuStrip ctxExcludedFolders;
+    private System.Windows.Forms.ContextMenuStrip ctxExclusions;
     private ToolStripMenuItem deleteToolStripMenuItem;
-    private System.Windows.Forms.Button btnSaveSettings;
     private System.Windows.Forms.Button btnReset;
     private ToolStripSeparator toolStripMenuItem12;
     private ToolStripMenuItem copyFilePathMenuItem;
@@ -967,4 +1156,11 @@ partial class FrmMain
     private ToolStripMenuItem statusToolStripMenuItem;
     private ToolStripMenuItem hashToolStripMenuItem;
     private ToolStripMenuItem lineToolStripMenuItem;
+    private ToolStripMenuItem excludeFilesMenuItem;
+    private ToolStripSeparator toolStripMenuItem16;
+    private ToolTip toolTipHeightNumPasses;
+    private ToolStripStatusLabel stripFailedStatus;
+    private CheckBox checkReprocessFailed;
+    private ToolStripMenuItem copyToolStripMenuItem;
+    private ToolStripSeparator toolStripMenuItem19;
 }

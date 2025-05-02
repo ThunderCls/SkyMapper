@@ -31,7 +31,9 @@ static class Program
                 .ConfigureServices(SetupServices)
                 .UseSerilog()
                 .Build();
-
+        
+        ServiceLocator.Initialize(host.Services);
+        
         using var scope = host.Services.CreateScope();
         var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>();
         using var dbContext = dbContextFactory.CreateDbContext();

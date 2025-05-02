@@ -4,9 +4,9 @@ namespace SkyMapper.Utils;
 
 public static class WorkerUtils
 {
-    private static string HiddenFolder = ".mohidden";
+    private static readonly string HiddenFolder = ".mohidden";
     
-    public static List<string> ExtractNormalsMissingParallax(string rootFolder, List<string> excludedFolders)
+    public static List<string> ExtractNormalsMissingParallax(string rootFolder, IEnumerable<string> exclusions)
     {
         var normalsMissingParallax = new List<string>();
         var textures = Directory
@@ -15,13 +15,13 @@ public static class WorkerUtils
         var filteredTextures = textures
             .Where(texture =>
                 Regex.IsMatch(texture, @"^.*_n\.dds$", RegexOptions.IgnoreCase) &&
-                !excludedFolders.Any(excludedFolder =>
+                !texture.Contains(HiddenFolder, StringComparison.OrdinalIgnoreCase) &&
+                !exclusions.Any(exclusion =>
                 {
-                    var baseTexturePath = Path.GetDirectoryName(
-                        texture.Replace($"{rootFolder}{Path.DirectorySeparatorChar}", string.Empty))!;
-                    return baseTexturePath.Contains(excludedFolder);
-                }) &&
-                !texture.Contains(HiddenFolder, StringComparison.OrdinalIgnoreCase));
+                    var baseTextureFilePath = texture
+                        .Replace($"{rootFolder}{Path.DirectorySeparatorChar}", string.Empty);
+                    return Regex.IsMatch(baseTextureFilePath, exclusion, RegexOptions.IgnoreCase);
+                }));
 
         foreach (var normal in filteredTextures)
         {

@@ -31,3 +31,7 @@
 **/logs
 Publish
 data.db
+data.db**
+**/target
+**/.github
+**/.vscode

@@ -7,7 +7,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<Settings> Settings { get; set; }
     public DbSet<TextureFile> TextureFiles { get; set; }
-    public DbSet<ExcludedFolder> ExcludedFolders { get; set; }
+    public DbSet<Exclusions> Exclusions { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -21,27 +21,25 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Settings>(e =>
-        {
-            e.HasData(new Settings
-            {
-                Id = 1,
-                MaxThreads = 5,
-                HeightMapIntensity = -88
-            });
-        });
-
-        modelBuilder.Entity<ExcludedFolder>(e =>
+        modelBuilder.Entity<Exclusions>(e =>
         {
             e.HasData(
-                new ExcludedFolder { Id = 1, FolderPath = @"textures\lod" },
-                new ExcludedFolder { Id = 2, FolderPath = @"textures\interface" },
-                new ExcludedFolder { Id = 3, FolderPath = @"textures\DynDOLOD" },
-                new ExcludedFolder { Id = 4, FolderPath = @"textures\actors\character\facegendata" },
-                new ExcludedFolder { Id = 5, FolderPath = @"textures\chargen" },
-                new ExcludedFolder { Id = 6, FolderPath = @"textures\cubemap" },
-                new ExcludedFolder { Id = 7, FolderPath = @"textures\cubemaps" },
-                new ExcludedFolder { Id = 8, FolderPath = @"textures\terrain" }
+                new Exclusions { Id = 1, Pattern = @"textures\\lod\\" },
+                new Exclusions { Id = 2, Pattern = @"textures\\interface\\" },
+                new Exclusions { Id = 3, Pattern = @"textures\\DynDOLOD\\" },
+                new Exclusions { Id = 4, Pattern = @"textures\\terrain\\" },
+                new Exclusions { Id = 5, Pattern = @"textures\\.*\\chargen\\" },
+                new Exclusions { Id = 6, Pattern = @"textures\\.*\\cubemap.*\\" },
+                new Exclusions { Id = 7, Pattern = @"textures\\.*\\facegen.*\\" },
+                new Exclusions { Id = 8, Pattern = @"textures\\.*\\*hair.*\\" },
+                new Exclusions { Id = 9, Pattern = @"textures\\.*\\*brow.*\\" },
+                new Exclusions { Id = 10, Pattern = @"textures\\.*\\mouth\\" },
+                new Exclusions { Id = 11, Pattern = @"textures\\.*\\*eyes\\" },
+                new Exclusions { Id = 12, Pattern = @"textures\\.*\\*beard.*\\" },
+                new Exclusions { Id = 13, Pattern = @"textures\\.*\\*lashes\\" },
+                new Exclusions { Id = 14, Pattern = @"textures\\.*\\*gash\\" },
+                new Exclusions { Id = 15, Pattern = @"textures\\.*\\*tattoo\\" },
+                new Exclusions { Id = 16, Pattern = @"textures\\.*\\*skin.*\\" }
             );
         });
 
