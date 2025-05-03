@@ -63,9 +63,9 @@ public class WorkerService
             await WorkerTerminate.Invoke(file, cancellationToken);
     }
 
-    private async Task OnProcessExecutionError(string message)
+    private void OnProcessExecutionError(string message)
     {
-        await OnWorkerError(_args!.File, message, _args!.CancellationToken);
+        _logger.LogError("Process execution for {File} failed with error: {Message}", _args!.File, message);
     }
     
     private void OnProcessExecutionProgress(string message)

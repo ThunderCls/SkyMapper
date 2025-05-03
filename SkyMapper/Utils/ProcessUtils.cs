@@ -10,7 +10,7 @@ public static class ProcessUtils
         string arguments,
         Form synchronizingObject,
         Action<string>? progressAction = null,
-        Func<string, Task>? errorAction = null)
+        Action<string>? errorAction = null)
     {
         var process = new Process
         {

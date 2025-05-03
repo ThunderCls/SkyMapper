@@ -82,7 +82,7 @@ public partial class FrmMain : Form
             FileHashMd5 = storedTexture.FileHashMd5,
             IsProcessed = storedTexture.IsProcessed
         }, Color.Black);
-        stripStatus.Text = $"Processed: {_processedFiles++} of {_totalFiles}";
+        stripStatus.Text = $"Processed: {++_processedFiles} of {_totalFiles}";
     }
 
     private void OnWorkerServiceProgress(string file, string message)
@@ -107,7 +107,7 @@ public partial class FrmMain : Form
             FileHashMd5 = storedTexture.FileHashMd5,
             IsProcessed = storedTexture.IsProcessed
         }, Color.Brown);
-        stripFailedStatus.Text = $"Failed: {_failedFiles++} of {_totalFiles}";
+        stripFailedStatus.Text = $"Failed: {++_failedFiles} of {_totalFiles}";
     }
 
     #endregion
@@ -150,7 +150,7 @@ public partial class FrmMain : Form
                     stripStatus.Text = "Finding textures with missing height maps...";
                 });
 
-                var exclusions = await _dataService.GetExclusionListAsync();
+                var exclusions = await _dataService.GetExclusionListAsync(CancellationTokenSrc.Token);
                 _logger.LogInformation("Extracting normals with missing height maps");
                 var normalsNoParallaxList = WorkerUtils
                     .ExtractNormalsMissingParallax(txtGameLocation.Text, exclusions.Select(x => x.Pattern))
@@ -163,7 +163,8 @@ public partial class FrmMain : Form
                     normalsNoParallaxList,
                     txtGameLocation.Text,
                     OutputLocation,
-                    radioSyncOutputFolder.Checked);
+                    radioSyncOutputFolder.Checked,
+                    CancellationTokenSrc.Token);
                 if (!storedTextures.Any())
                 {
                     _logger.LogInformation("No missing height maps found. Stopping...");
@@ -240,7 +241,7 @@ public partial class FrmMain : Form
                     listProcessing.EndUpdate();
                     listProcessing.Refresh();
                     progressLoading.Hide();
-                    stripStatus.Text = $"Processed: {_processedFiles++} of {_totalFiles}";
+                    stripStatus.Text = $"Processed: {_processedFiles} of {_totalFiles}";
                 });
 
                 _logger.LogInformation(
@@ -352,8 +353,8 @@ public partial class FrmMain : Form
             listProcessing.Location.Y + (listProcessing.Height / 2) - (progressLoading.Height / 2));
 
         _logger.LogInformation("Loading settings");
-        var settings = await _dataService.GetSettingsAsync();
-        var exclusions = await _dataService.GetExclusionListAsync();
+        var settings = await _dataService.GetSettingsAsync(CancellationTokenSrc.Token);
+        var exclusions = await _dataService.GetExclusionListAsync(CancellationTokenSrc.Token);
         foreach (var exclusion in exclusions)
         {
             listExclusions.Items.Add(exclusion.Pattern);
@@ -370,7 +371,7 @@ public partial class FrmMain : Form
                 {
                     settings.GameDataFolderLocation = Path.Combine(installFolder, "data");
                     _logger.LogInformation("Game data location found: {InstallFolder}", settings.GameDataFolderLocation);
-                    await _dataService.UpdateSettings(settings);
+                    await _dataService.UpdateSettings(settings, CancellationTokenSrc.Token);
                 }
             }
         }
@@ -390,7 +391,7 @@ public partial class FrmMain : Form
         checkReprocessFailed.Checked = settings.ReprocessFailedTextures;
 
         _logger.LogInformation("Loading textures list");
-        var storedTextures = await _dataService.GetTextureFileListAsync();
+        var storedTextures = await _dataService.GetTextureFileListAsync(CancellationTokenSrc.Token);
         stripStatus.Text = $"Processed: {storedTextures.Count(t => t.IsProcessed)} of {storedTextures.Count}";
         var textureFileList = storedTextures
             .Select(t =>
@@ -414,7 +415,7 @@ public partial class FrmMain : Form
     private async void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
     {
         _logger.LogInformation("Saving settings");
-        var settings = await _dataService.GetSettingsAsync();
+        var settings = await _dataService.GetSettingsAsync(CancellationTokenSrc.Token);
         settings.HeightMapIntensity = trackHeightIntensity.Value;
         settings.HeightMapPasses = trackHeightNumPasses.Value;
         settings.HeightMapMaxSteps = trackHeightSteps.Value;
@@ -422,7 +423,7 @@ public partial class FrmMain : Form
         settings.GameDataFolderLocation = txtGameLocation.Text;
         settings.SyncOutputFolder = radioSyncOutputFolder.Checked;
         settings.ReprocessFailedTextures = checkReprocessFailed.Checked;
-        await _dataService.UpdateSettings(settings);
+        await _dataService.UpdateSettings(settings, CancellationTokenSrc.Token);
 
         _logger.LogInformation("Closing application");
         if (!_isProcessing) return;
@@ -542,7 +543,7 @@ public partial class FrmMain : Form
             await _dataService.AddExclusionAsync(new Exclusions
             {
                 Pattern = txtExcludedFolder.Text
-            });
+            }, CancellationTokenSrc.Token);
             txtExcludedFolder.Clear();
             txtExcludedFolder.Focus();
         }
@@ -558,7 +559,7 @@ public partial class FrmMain : Form
             exclusionPatterns.Add(item.Text);
         }
 
-        await _dataService.RemoveExclusionListAsync(exclusionPatterns);
+        await _dataService.RemoveExclusionListAsync(exclusionPatterns, CancellationTokenSrc.Token);
     }
 
     private void copyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -609,8 +610,8 @@ public partial class FrmMain : Form
             .Distinct();
 
         await _dataService.AddExclusionListAsync(foldersToExclude
-            .Select(f => new Exclusions { Pattern = f.Replace(@"\", @"\\") }));
-        var exclusions = await _dataService.GetExclusionListAsync();
+            .Select(f => new Exclusions { Pattern = f.Replace(@"\", @"\\") }), CancellationTokenSrc.Token);
+        var exclusions = await _dataService.GetExclusionListAsync(CancellationTokenSrc.Token);
         GuiUtils.UpdateListViewItems(
             listExclusions,
             exclusions.Select(f => f.Pattern).ToList());
@@ -629,8 +630,8 @@ public partial class FrmMain : Form
             .Distinct();
 
         await _dataService.AddExclusionListAsync(filesToExclude
-            .Select(f => new Exclusions { Pattern = f.Replace(@"\", @"\\") }));
-        var exclusions = await _dataService.GetExclusionListAsync();
+            .Select(f => new Exclusions { Pattern = f.Replace(@"\", @"\\") }), CancellationTokenSrc.Token);
+        var exclusions = await _dataService.GetExclusionListAsync(CancellationTokenSrc.Token);
         GuiUtils.UpdateListViewItems(
             listExclusions,
             exclusions.Select(f => f.Pattern).ToList());
@@ -691,7 +692,7 @@ public partial class FrmMain : Form
         _logger.LogInformation("Clearing cache by user request");
         try
         {
-            await _dataService.ClearTextureFilesAsync();
+            await _dataService.ClearTextureFilesAsync(CancellationTokenSrc.Token);
             if (Directory.Exists(OutputLocation))
                 Directory.Delete(OutputLocation, true);
 
